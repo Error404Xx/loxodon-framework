@@ -176,7 +176,10 @@ namespace Loxodon.Framework.Tutorials
         {
             int iconIndex = Random.Range(1, 30);
             float price = Random.Range(0f, 100f);
-            return new ListItemViewModel(this.itemSelectCommand, this.itemClickCommand) { Title = "Equip " + id, Icon = string.Format("EquipImages_{0}", iconIndex), Price = price };
+            return new ListItemViewModel(this.itemSelectCommand, this.itemClickCommand)
+            {
+                Title = "Equip " + id, Icon = string.Format("EquipImages_{0}", iconIndex), Price = price
+            };
         }
     }
 }

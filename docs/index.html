@@ -1,0 +1,3869 @@
+<h2>&lt;!--</h2>
+<h2>puppeteer:
+landscape: false
+format: &quot;A3&quot;
+timeout: 3000 # &lt;= 特殊设置，意味着等待（waitFor） 3000 毫秒</h2>
+<p>--&gt;
+<img src="images/icon.png" alt=""></p>
+<h1>Loxodon Framework</h1>
+<p><em>MVVM Framework for Unity3D(C# &amp; XLua &amp; ILRuntime)</em></p>
+<p><em>开发者 Clark</em>
+<em>Version 2.0.0</em></p>
+<p>&lt;div style=&quot;page-break-after: always;&quot;&gt;&lt;/div&gt;</p>
+<h2>目录</h2>
+<p>&lt;!-- @import &quot;[TOC]&quot; {cmd=&quot;toc&quot; depthFrom=2 depthTo=6 orderedList=false} --&gt;
+&lt;!-- code_chunk_output --&gt;</p>
+<ul>
+<li><a href="#%E6%A6%82%E8%BF%B0">概述</a></li>
+<li><a href="#%E5%AE%89%E8%A3%85">安装</a>
+<ul>
+<li><a href="#1xx%E7%89%88%E6%9C%AC%E5%8D%87%E7%BA%A7%E5%88%B020%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9">1.x.x版本升级到2.0注意事项</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8-openupm-%E5%AE%89%E8%A3%85%E6%8E%A8%E8%8D%90">使用 OpenUPM 安装(推荐)</a></li>
+<li><a href="#%E4%BF%AE%E6%94%B9packagesmanifestjson%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85">修改Packages/manifest.json文件安装</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87git-url%E5%AE%89%E8%A3%85">通过git URL安装</a></li>
+<li><a href="#%E9%80%9A%E8%BF%87-unitypackage-%E6%96%87%E4%BB%B6%E5%AE%89%E8%A3%85">通过 *.unitypackage 文件安装</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E7%A4%BA%E4%BE%8B">导入示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AE%98%E6%96%B9%E6%8F%92%E4%BB%B6%E5%8F%AF%E9%80%89">官方插件（可选）</a></li>
+<li><a href="#lua%E6%8F%92%E4%BB%B6%E5%AE%89%E8%A3%85%E5%8F%AF%E9%80%89">Lua插件安装（可选）</a>
+<ul>
+<li><a href="#%E5%AE%89%E8%A3%85xlua">安装XLua</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5lua%E6%8F%92%E4%BB%B6">导入Lua插件</a></li>
+<li><a href="#%E5%AF%BC%E5%85%A5%E7%A4%BA%E4%BE%8B-1">导入示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BF%AB%E9%80%9F%E5%85%A5%E9%97%A8">快速入门</a>
+<ul>
+<li><a href="#c-%E7%A4%BA%E4%BE%8B">C# 示例</a></li>
+<li><a href="#lua-%E7%A4%BA%E4%BE%8B">Lua 示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%8A%9F%E8%83%BD%E4%BB%8B%E7%BB%8D">功能介绍</a>
+<ul>
+<li><a href="#%E4%B8%8A%E4%B8%8B%E6%96%87context">上下文（Context）</a>
+<ul>
+<li><a href="#%E5%BA%94%E7%94%A8%E4%B8%8A%E4%B8%8B%E6%96%87applicationcontext">应用上下文（ApplicationContext）</a></li>
+<li><a href="#%E7%8E%A9%E5%AE%B6%E4%B8%8A%E4%B8%8B%E6%96%87playercontext">玩家上下文（PlayerContext）</a></li>
+<li><a href="#%E5%85%B6%E5%AE%83%E4%B8%8A%E4%B8%8B%E6%96%87context">其它上下文（Context）</a></li>
+</ul>
+</li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%AE%B9%E5%99%A8">服务容器</a>
+<ul>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E6%B3%A8%E5%86%8C%E5%99%A8iserviceregistry">服务注册器(IServiceRegistry)</a></li>
+<li><a href="#%E6%9C%8D%E5%8A%A1%E5%AE%9A%E4%BD%8D%E5%99%A8iservicelocator">服务定位器(IServiceLocator)</a></li>
+<li><a href="#%E6%9C%8D%E5%8A%A1bundleiservicebundle">服务Bundle(IServiceBundle)</a></li>
+</ul>
+</li>
+<li><a href="#%E5%BA%94%E7%94%A8%E9%85%8D%E7%BD%AEpreference">应用配置（Preference）</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6properties%E6%96%87%E4%BB%B6">配置文件（Properties文件）</a>
+<ul>
+<li><a href="#%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B">支持的数值类型</a></li>
+<li><a href="#%E6%95%B0%E7%BB%84%E5%88%86%E9%9A%94%E7%AC%A6">数组分隔符</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E7%BB%84%E5%90%88">配置文件的组合</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E5%AD%90%E9%9B%86">配置文件的子集</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B">配置文件示例</a></li>
+</ul>
+</li>
+<li><a href="#%E5%9B%BD%E9%99%85%E5%8C%96%E5%92%8C%E6%9C%AC%E5%9C%B0%E5%8C%96">国际化和本地化</a>
+<ul>
+<li><a href="#%E7%9B%AE%E5%BD%95%E7%BB%93%E6%9E%84">目录结构</a></li>
+<li><a href="#%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%9A%84%E6%A0%BC%E5%BC%8F">配置文件的格式</a></li>
+<li><a href="#xml%E7%89%B9%E6%AE%8A%E5%AD%97%E7%AC%A6">XML特殊字符</a></li>
+<li><a href="#xml%E6%94%AF%E6%8C%81%E7%9A%84%E6%95%B0%E5%80%BC%E7%B1%BB%E5%9E%8B">XML支持的数值类型</a></li>
+<li><a href="#%E7%94%9F%E6%88%90c%E8%84%9A%E6%9C%AC">生成C#脚本</a></li>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E5%8C%96%E8%A7%86%E5%9B%BE%E7%BB%84%E4%BB%B6">本地化视图组件</a></li>
+<li><a href="#%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E5%99%A8localizeddatabinder">本地化数据绑定器(LocalizedDataBinder)</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E6%8F%90%E4%BE%9B%E5%99%A8idataprovider">数据提供器(IDataProvider)</a></li>
+<li><a href="#%E8%8E%B7%E5%BE%97%E8%AE%BE%E5%A4%87%E7%9A%84%E5%BD%93%E5%89%8D%E8%AF%AD%E8%A8%80">获得设备的当前语言</a></li>
+<li><a href="#%E4%BD%BF%E7%94%A8%E7%A4%BA%E4%BE%8B">使用示例</a></li>
+<li><a href="#%E6%94%AF%E6%8C%81csv%E6%A0%BC%E5%BC%8F%E7%9A%84%E6%9C%AC%E5%9C%B0%E5%8C%96%E6%8F%92%E4%BB%B6">支持CSV格式的本地化插件</a></li>
+</ul>
+</li>
+<li><a href="#%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F">日志系统</a></li>
+<li><a href="#streamingassets%E7%9B%AE%E5%BD%95%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96android">StreamingAssets目录文件读取（Android）</a></li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B%E5%BC%82%E6%AD%A5%E7%BB%93%E6%9E%9C%E5%92%8C%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1">线程/协程异步结果和异步任务</a>
+<ul>
+<li><a href="#asyncresult">AsyncResult</a></li>
+<li><a href="#progressresult">ProgressResult</a></li>
+<li><a href="#asynctask">AsyncTask</a></li>
+<li><a href="#progresstask">ProgressTask</a></li>
+<li><a href="#coroutinetask">CoroutineTask</a></li>
+</ul>
+</li>
+<li><a href="#async-await">Async &amp; Await</a>
+<ul>
+<li><a href="#c-%E7%9A%84-async-await">C# 的 async &amp; await</a></li>
+<li><a href="#task%E8%BD%ACunity%E5%8D%8F%E7%A8%8B">Task转Unity协程</a></li>
+<li><a href="#lua%E7%9A%84async-await">Lua的async &amp; await</a></li>
+<li><a href="#c-%E8%B0%83%E7%94%A8lua%E7%9A%84async%E5%87%BD%E6%95%B0">C# 调用Lua的async函数</a></li>
+<li><a href="#lua%E7%9A%84try-catch-finally">Lua的try / catch / finally</a></li>
+</ul>
+</li>
+<li><a href="#%E7%BA%BF%E7%A8%8B%E5%8D%8F%E7%A8%8B%E6%89%A7%E8%A1%8C%E5%99%A8">线程/协程执行器</a>
+<ul>
+<li><a href="#%E6%89%A7%E8%A1%8C%E5%99%A8executors">执行器(Executors)</a></li>
+<li><a href="#%E5%AE%9A%E6%97%B6%E4%BB%BB%E5%8A%A1%E6%89%A7%E8%A1%8C%E5%99%A8ischeduledexecutor">定时任务执行器(IScheduledExecutor)</a></li>
+<li><a href="#%E5%8F%AF%E6%8B%A6%E6%88%AA%E7%9A%84%E8%BF%AD%E4%BB%A3%E5%99%A8interceptableenumerator">可拦截的迭代器(InterceptableEnumerator)</a></li>
+</ul>
+</li>
+<li><a href="#%E6%B6%88%E6%81%AF%E7%B3%BB%E7%BB%9Fmessenger">消息系统(Messenger)</a></li>
+<li><a href="#%E5%8F%AF%E8%A7%82%E5%AF%9F%E7%9A%84%E5%AF%B9%E8%B1%A1observables">可观察的对象(Observables)</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9Adatabinding">数据绑定(Databinding)</a>
+<ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E7%A4%BA%E4%BE%8B">数据绑定示例</a></li>
+<li><a href="#%E7%BB%91%E5%AE%9A%E6%A8%A1%E5%BC%8F">绑定模式</a></li>
+<li><a href="#%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E5%99%A8iconverter">类型转换器(IConverter)</a></li>
+<li><a href="#%E7%BB%91%E5%AE%9A%E7%B1%BB%E5%9E%8B">绑定类型</a></li>
+<li><a href="#command-parameter">Command Parameter</a></li>
+<li><a href="#scope-key">Scope Key</a></li>
+<li><a href="#%E7%BB%91%E5%AE%9A%E7%9A%84%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F">绑定的生命周期</a></li>
+<li><a href="#%E6%B3%A8%E5%86%8C%E5%B1%9E%E6%80%A7%E5%92%8C%E5%9F%9F%E7%9A%84%E8%AE%BF%E9%97%AE%E5%99%A8">注册属性和域的访问器</a></li>
+</ul>
+</li>
+<li><a href="#ui%E6%A1%86%E6%9E%B6">UI框架</a>
+<ul>
+<li><a href="#%E5%8A%A8%E6%80%81%E5%8F%98%E9%87%8F%E9%9B%86variables">动态变量集(Variables)</a></li>
+<li><a href="#ui%E8%A7%86%E5%9B%BE%E5%AE%9A%E4%BD%8D%E5%99%A8iuiviewlocator">UI视图定位器(IUIViewLocator)</a></li>
+<li><a href="#ui%E8%A7%86%E5%9B%BE%E5%8A%A8%E7%94%BBanimations">UI视图动画(Animations)</a></li>
+<li><a href="#ui%E6%8E%A7%E4%BB%B6">UI控件</a></li>
+<li><a href="#%E8%A7%86%E5%9B%BE-%E7%AA%97%E5%8F%A3%E5%92%8C%E7%AA%97%E5%8F%A3%E7%AE%A1%E7%90%86%E5%99%A8">视图、窗口和窗口管理器</a></li>
+<li><a href="#%E4%BA%A4%E4%BA%92%E8%AF%B7%E6%B1%82interactionrequest">交互请求(InteractionRequest)</a></li>
+<li><a href="#%E4%BA%A4%E4%BA%92%E8%A1%8C%E4%B8%BAinteractionaction">交互行为(InteractionAction)</a></li>
+<li><a href="#%E9%9B%86%E5%90%88%E4%B8%8E%E5%88%97%E8%A1%A8%E8%A7%86%E5%9B%BE%E7%9A%84%E7%BB%91%E5%AE%9A">集合与列表视图的绑定</a></li>
+<li><a href="#%E6%95%B0%E6%8D%AE%E7%BB%91%E5%AE%9A%E4%B8%8E%E5%BC%82%E6%AD%A5%E5%8A%A0%E8%BD%BD%E7%B2%BE%E7%81%B5">数据绑定与异步加载精灵</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#lua">Lua</a>
+<ul>
+<li><a href="#%E6%A8%A1%E5%9D%97%E4%B8%8E%E7%BB%A7%E6%89%BF">模块与继承</a></li>
+<li><a href="#lua%E7%9A%84obserableobject">Lua的ObserableObject</a></li>
+<li><a href="#lua%E4%B8%AD%E4%BD%BF%E7%94%A8unity%E7%9A%84%E5%8D%8F%E7%A8%8B">Lua中使用Unity的协程</a></li>
+<li><a href="#lua%E4%B8%AD%E4%BD%BF%E7%94%A8%E6%97%A5%E5%BF%97%E7%B3%BB%E7%BB%9F">Lua中使用日志系统</a></li>
+<li><a href="#lua-%E9%A2%84%E7%BC%96%E8%AF%91%E5%B7%A5%E5%85%B7">Lua 预编译工具</a>
+<ul>
+<li><a href="#lua%E5%8A%A0%E8%BD%BD%E5%99%A8">Lua加载器</a></li>
+<li><a href="#%E7%A4%BA%E4%BE%8B">示例</a></li>
+<li><a href="#%E6%89%A9%E5%B1%95%E5%85%B6%E4%BB%96%E5%8A%A0%E5%AF%86%E6%96%B9%E5%BC%8F">扩展其他加密方式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#%E5%88%86%E5%B1%82%E6%9E%B6%E6%9E%84">分层架构</a>
+<ul>
+<li><a href="#%E8%A1%A8%E7%8E%B0%E5%B1%82view">表现层(View)</a></li>
+<li><a href="#%E5%BA%94%E7%94%A8%E5%B1%82service">应用层(Service)</a></li>
+<li><a href="#%E9%A2%86%E5%9F%9F%E5%B1%82domain-model">领域层(Domain Model)</a></li>
+<li><a href="#%E5%9F%BA%E7%A1%80%E5%B1%82infrastructure">基础层(Infrastructure)</a></li>
+</ul>
+</li>
+<li><a href="#%E8%81%94%E7%B3%BB%E6%96%B9%E5%BC%8F">联系方式</a></li>
+</ul>
+<p>&lt;!-- /code_chunk_output --&gt;
+&lt;div style=&quot;page-break-after: always;&quot;&gt;&lt;/div&gt;</p>
+<h2>概述</h2>
+<p><strong>要求Unity 2018.4 或者更高版本</strong></p>
+<p>LoxodonFramework是一个轻量级的MVVM(Model-View-ViewModel)框架，它是专门为Unity3D游戏开发设计的，参考了WPF和Android的MVVM设计，它提供了视图和视图模型的数据绑定、本地化、一个简单的服务容器、配置文件组件、线程工具组件、应用上下文和玩家上下文，异步线程和协程的任务组件等基本组件，同时还提供了一个UI视图的框架。所有代码都基于面向对象面向接口的思路设计，几乎所有功能都可以自定义。而且在数据绑定部分进行了性能优化，在支持JIT的平台上使用的是委托的方式绑定，在不支持JIT的平台，默认使用的是反射，但是可以通过注入委托函数的方式来优化！</p>
+<p>本框架使用C#语言开发，同时也支持使用XLua来开发，XLua插件是一个可选项，如果项目需要热更新，那么只要安装了XLua插件，则可以完全使用Lua来开发游戏。</p>
+<p>这个插件兼容 MacOSX,Windows,Linux,UWP,WebGL,IOS and Android等等，并且完全开源。</p>
+<p><strong>已测试的平台：</strong></p>
+<ul>
+<li><strong>PC/Mac/Linux</strong>  (.Net4.x; .Net Standard 2.0; IL2CPP)</li>
+<li><strong>IOS</strong>  (.Net4.x; .Net Standard 2.0; IL2CPP)</li>
+<li><strong>Android</strong>  (.Net4.x; .Net Standard 2.0; IL2CPP)</li>
+<li><strong>UWP(window10)</strong> (.Net4.x; .Net Standard 2.0; IL2CPP)</li>
+<li><strong>WebGL</strong>  (.Net4.x; .Net Standard 2.0; IL2CPP)</li>
+</ul>
+<p><strong>关键特性</strong></p>
+<ul>
+<li>支持多平台，高扩展性，面向接口开发;</li>
+<li>支持UGUI和FairyGUI;</li>
+<li>支持XLua，可以完全使用Lua脚本开发（可选）;</li>
+<li>支持async&amp;await (C#和Lua都支持);</li>
+<li>Lua支持了try&amp;catch&amp;finally;</li>
+<li>支持线程和协程的异步结果和异步任务，采用Future/Promise设计模式;</li>
+<li>提供了多线程组件，线程切换组件和定时执行器;</li>
+<li>提供了一个消息系统，支持订阅和发布;</li>
+<li>提供可加密的配置文件，支持对象存取，可自定义类型转换器，扩展功能;</li>
+<li>提供了本地化支持，与Android的本地化类似，支持基本数据类型、数组、和U3D的一些值类型;</li>
+<li>支持全局上下文和玩家上下文;</li>
+<li>提供了一个服务容器，支持注册和注销服务;</li>
+<li>提供了AlertDialog、Loading、Toast等通用UI控件，支持自定义外观;</li>
+<li>提供了UI视图的控制和管理功能；</li>
+<li>提供数据绑定功能:
+<ul>
+<li>Field绑定，只支持OneTime的模式，因无法支持改变通知;</li>
+<li>属性绑定，支持TwoWay双向绑定，值修改自动通知;</li>
+<li>普通字典、列表绑定，不支持改变通知;</li>
+<li>支持C#事件绑定;</li>
+<li>支持Unity3D的EventBase事件绑定;</li>
+<li>支持静态类的属性和Field的绑定;</li>
+<li>支持方法绑定（包括静态方法）;</li>
+<li>支持命令绑定，通过命令绑定可以方便控制按钮的有效无效状态;</li>
+<li>支持可观察属性、字典、列表的绑定，支持改变通知，视图模型修改自动更改UI显示;</li>
+<li>支持表达式的绑定;</li>
+<li>支持交互请求和交互行为的绑定;</li>
+<li>支持类型转换器，可以将图片名称转换为图集中的Sprite;</li>
+<li>可以自定义扩展更多的绑定类型;</li>
+</ul>
+</li>
+</ul>
+<h2>安装</h2>
+<p>自Loxodon.Framework 2.0版本开始，保留了原有的 .unitypackage包发布方式，同时添加了UPM发布方式，此版本要求Unity 2018.4.2及以上版本，框架的目录结构和API都进行了一些调整，同时引入了async/await、Task等新特性，升级前请先查看下文的升级注意事项。</p>
+<p><strong>安装注意：在中国区下载的Unity版本屏蔽了第三方仓库，会导致UPM包安装失败，咨询了Unity中国相关人员说是马上会放开，如果UPM方式安装失败请使用.unitypackage文件安装或者使用非中国区的Unity版本</strong></p>
+<h3>1.x.x版本升级到2.0注意事项</h3>
+<p><strong>从1.x.x版本升级到2.0版本前，请先删除老版本的所有文件，按下面的安装步骤安装新版本。2.0版本的教程和示例代码默认不会自动导入，如需要请手动导入到项目中。</strong></p>
+<p><strong>Loxodon.Framework.XLua和Loxodon.Framework.Bundle因为依赖问题仍然使用传统方式发布</strong></p>
+<p><strong>不兼容的改变：</strong></p>
+<ul>
+<li><strong>修改了IUIViewLocator接口以及实现，如果继承了此接口的自定义实现需要调整。</strong></li>
+<li><strong>修改了本地化模块的IDataProvider接口及实现，如果没有自定义类，不会有影响。</strong></li>
+<li><strong>IAsyncTask和IProgressTask有用到多线程,在WebGL平台不支持，2.0版本后建议不再使用，框架中用到了它们的地方都改为IAsyncResult和IProgressResult。</strong></li>
+<li><strong>新的API使用了async/await和Task，不再支持 .net 2.0</strong></li>
+<li><strong>修改了Window、WindowManager等几个类的函数，改IAsyncTask为IAsyncResult</strong></li>
+</ul>
+<h3>使用 OpenUPM 安装(推荐)</h3>
+<p><a href="https://openupm.com/">OpenUPM</a> 是一个开源的UPM包仓库，它支持发布第三方的UPM包，它能够自动管理包的依赖关系，推荐使用它安装本框架.</p>
+<p>通过openupm命令安装包,要求<a href="https://nodejs.org/en/download/">nodejs</a> and openupm-cli客户端的支持，如果没有安装请先安装nodejs和open-cli。</p>
+<pre><code># 使用npm命令安装openupm-cli，如果已经安装请忽略.
+npm install -g openupm-cli
+
+#切换当前目录到项目的根目录
+cd F:/workspace/New Unity Project
+
+#安装 loxodon-framework
+openupm add com.vovgou.loxodon-framework
+</code></pre>
+<h3>修改Packages/manifest.json文件安装</h3>
+<p>通过修改manifest.json文件安装，不需要安装nodejs和openupm-cli客户端。在Unity项目根目录下找到Packages/manifest.json文件，在文件的scopedRegistries（没有可以自己添加）节点下添加第三方仓库package.openupm.com的配置，同时在dependencies节点下添加com.vovgou.loxodon-framework的配置，保存后切换到Unity窗口即可完成安装。</p>
+<pre><code>{
+  &quot;dependencies&quot;: {
+    ...
+    &quot;com.unity.modules.xr&quot;: &quot;1.0.0&quot;,
+    &quot;com.vovgou.loxodon-framework&quot;: &quot;2.0.0-preview&quot;
+  },
+  &quot;scopedRegistries&quot;: [
+    {
+      &quot;name&quot;: &quot;package.openupm.com&quot;,
+      &quot;url&quot;: &quot;https://package.openupm.com&quot;,
+      &quot;scopes&quot;: [
+        &quot;com.vovgou.loxodon-framework&quot;,
+        &quot;com.openupm&quot;
+      ]
+    }
+  ]
+}
+</code></pre>
+<h3>通过git URL安装</h3>
+<p>Unity 2019.3.4f1及以上版本支持使用git URL安装. 如下图添加 https://github.com/vovgou/loxodon-framework.git?path=Loxodon.Framework/Assets/LoxodonFramework 地址到UPM管理器，耐性等待一段时间，下载完成后即安装成功。</p>
+<p><img src="images/install_via_git.png" alt=""></p>
+<h3>通过 *.unitypackage 文件安装</h3>
+<p>从以下地址下载 <a href="https://github.com/vovgou/loxodon-framework/releases">Loxodon.Framework2.x.x.unitypackage</a> 后,导入到你的项目中即完成安装.</p>
+<ul>
+<li><a href="https://assetstore.unity.com/packages/tools/gui/loxodon-framework-77446">AssetStore</a></li>
+<li><a href="https://github.com/vovgou/loxodon-framework/releases">Releases</a></li>
+</ul>
+<h3>导入示例</h3>
+<ul>
+<li>
+<p>Unity 2019 及以上版本可以通过Package Manager导入示例</p>
+<p>打开包管理器，找到Import into project 按钮点击，导入示例到项目中。</p>
+<p><img src="docs/images/install_examples.png" alt=""></p>
+</li>
+<li>
+<p>Unity 2018 版本导入示例</p>
+<p>在Packages/Loxodon Framework/Package Resources/ 目录中找到Examples.unitypackage和Tutorials.unitypackage，双击导入到项目。</p>
+</li>
+</ul>
+<h2>官方插件（可选）</h2>
+<ul>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.XLua">Loxodon Framework XLua</a></p>
+<p>Loxodon.Framework框架的XLua插件，它是一个lua的MVVM框架，支持lua和c#混合编程或者也可以完全使用lua来编写您的整个游戏。安装步骤详见下一章节或者查看<a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.XLua">Loxodon.Framework.XLua的文档</a></p>
+</li>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.LocalizationsForCsv">Loxodon Framework Localization For CSV</a></p>
+<p>支持本地化文件格式为csv文件格式，要求 Unity2018.4 以上版本.</p>
+</li>
+<li>
+<p><a href="http://u3d.as/NkT">Loxodon Framework Bundle</a></p>
+<p>Loxodon.Framework.Bundle 是AssetBundle加载和管理的工具，也是一个AssetBundle资源冗余分析工具。它能够自动管理AssetBundle之间复杂的依赖关系，它通过引用计数来维护AssetBundle之间的依赖。你既可以预加载一个AssetBundle，自己管理它的释放，也可以直接通过异步的资源加载函数直接加载资源，资源加载函数会自动去查找资源所在的AB包，自动加载AB，使用完后又会自动释放AB。 它还支持弱缓存，如果对象模板已经在缓存中，则不需要重新去打开AB。它支持多种加载方式，WWW加载，UnityWebRequest加载，File方式的加载等等（在Unity5.6以上版本，请不要使用WWW加载器，它会产生内存峰值）。它提供了一个AssetBundle的打包界面，支持加密AB包（只建议加密敏感资源，因为会影响性能）。同时它也绕开了Unity3D早期版本的一些bug，比如多个协程并发加载同一个资源，在android系统会出错。它的冗余分析是通过解包AssetBundle进行的，这比在编辑器模式下分析的冗余更准确。</p>
+<p><img src="images/bundle.png" alt=""></p>
+</li>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.FairyGUI">Loxodon Framework FairyGUI</a></p>
+<p>框架已支持FairyGUI控件的数据绑定，请下载FairyGUI-unity和Loxodon Framework FairyGUI，并导入项目中。</p>
+<p><strong>下载：</strong>
+<a href="https://github.com/fairygui/FairyGUI-unity">FairyGUI-unity</a>
+<a href="https://github.com/vovgou/loxodon-framework/releases">Loxodon Framework FairyGUI</a></p>
+</li>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.Log4Net">Loxodon Framework Log4Net</a></p>
+<p>支持使用Log4Net在Unity中打印日志的插件，支持在局域网中远程调试。</p>
+<p><img src="images/log4net.png" alt=""></p>
+</li>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.Obfuscation">Loxodon Framework Obfuscation</a></p>
+<p>数据类型内存混淆插件，支持ObfuscatedByte，ObfuscatedShort，ObfuscatedInt,ObfuscatedLong,ObfuscatedFloat,ObfuscatedDouble类型，防止内存修改器修改游戏数值，支持数值类型的所有运算符，与byte、short、int、long、float、double类型之间可以自动转换，使用时替换对应的数值类型即可。
+Float和Double类型混淆时转为int和long类型进行与或运算，确保不会丢失精度，类型转换时使用unsafe代码，兼顾转换性能。</p>
+<p><strong>注意：要求Unity2018以上版本，请开启&quot;Allow unsafe Code&quot;</strong></p>
+<p><img src="docs/images/obfuscation_unsafe.png" alt=""></p>
+<p><strong>使用示例：</strong></p>
+<pre><code> ObfuscatedInt  length = 200;
+ ObfuscatedFloat scale = 20.5f;
+ int offset = 30;
+
+ float value = (length * scale) + offset;
+</code></pre>
+</li>
+<li>
+<p><a href="https://github.com/vovgou/loxodon-framework?path=Loxodon.Framework.Addressable">Loxodon Framework Addressable</a></p>
+<p>有关Addressable Asset System功能的扩展与支持。</p>
+</li>
+</ul>
+<h2>Lua插件安装（可选）</h2>
+<p>在本框架中，对于Lua语言的支持是通过插件扩展的方式来支持，它依赖腾讯的XLua项目和Loxodon.Framework框架，从Github下载<a href="https://github.com/vovgou/loxodon-framework/releases">Loxodon.Framework.XLua.unitypackage</a>，导入你的项目。它是可选的，只有需要热更新并且使用Lua语言开发的项目才需要安装它。具体安装步骤如下。</p>
+<h3>安装XLua</h3>
+<p>从Xlua的Github仓库下载最新版的XLua，可以使用源码版本Source code.zip或者xlua_v2.x.xx.zip版本（建议使用xlua_v2.x.xx.zip版本，避免和XLua示例类名冲突）。请将下载好的xlua解压缩，拷贝到当前项目中。</p>
+<p><strong>注意：XLua在Unity2018有兼容性问题，在编辑器模式下，请使用.Net3.5 或者 .Net4.x 不要使用.Net Standard2.0,否则会出错，如果想使用.Net Standard2.0 请参考xlua的FAQ解决兼容性问题。</strong></p>
+<p><a href="https://github.com/Tencent/xLua/blob/master/Assets/XLua/Doc/faq.md">XLua FAQ</a></p>
+<p><a href="https://github.com/Tencent/xLua/releases">XLua下载</a></p>
+<p><img src="images/xlua_2.1.15.png" alt=""></p>
+<h3>导入Lua插件</h3>
+<p>从Github下载<a href="https://github.com/vovgou/loxodon-framework/releases">Loxodon.Framework.XLua.unitypackage</a>文件，双击导入项目。</p>
+<p>如果出现编译错误，请检查是否导入了XLua的Examples目录，这个目录下的InvokeLua.cs文件定义了PropertyChangedEventArgs类，因没有使用命名空间，会导致类名冲突，请删除XLua目录下的Examples文件夹或者给InvokeLua.cs文件中的PropertyChangedEventArgs类添加上命名空间。</p>
+<h3>导入示例</h3>
+<p>在文件夹LoxodonFramework/XLua/PackageResources/目录下找到Examples.unitypackage 文件，双击导入项目。</p>
+<h2>快速入门</h2>
+<p>创建一个视图，左侧显示一个账号信息，右侧是一个表单，通过提交按钮可以修改左侧的账号信息，现在我们通过框架的视图和数据绑定功能来演示我们是如何做的。界面如下图：</p>
+<p><img src="images/DatabindingExample_01.png" alt=""></p>
+<h3>C# 示例</h3>
+<p>在一个UI视图的根对象上添加视图脚本组件DatabindingExample，并且将UI控件赋值到对应的属性上,这个示例中属性都是通过C#硬编码来定义的，当然你也可以使用动态的属性表VariableArray来动态定义属性，具体可以看Lua的例子，配置好属性后如下图所示。</p>
+<p><img src="images/DatabindingExample_03.png" alt=""></p>
+<p>下面请看代码，我们是如果来定义视图模型和视图脚本的，又是怎么样来绑定视图到视图模型的。</p>
+<pre><code>/// &lt;summary&gt;
+/// 账号子视图模型
+/// &lt;/summary&gt;
+public class AccountViewModel : ObservableObject
+{
+    private int id;
+    private string username;
+    private string password;
+    private string email;
+    private DateTime birthday;
+    private readonly ObservableProperty&lt;string&gt; address = new ObservableProperty&lt;string&gt;();
+
+    public int ID
+    {
+        get { return this.id; }
+        set { this.Set&lt;int&gt;(ref this.id, value, &quot;ID&quot;); }
+    }
+
+    public string Username
+    {
+        get { return this.username; }
+        set { this.Set&lt;string&gt;(ref this.username, value, &quot;Username&quot;); }
+    }
+
+    public string Password
+    {
+        get { return this.password; }
+        set { this.Set&lt;string&gt;(ref this.password, value, &quot;Password&quot;); }
+    }
+
+    public string Email
+    {
+        get { return this.email; }
+        set { this.Set&lt;string&gt;(ref this.email, value, &quot;Email&quot;); }
+    }
+
+    public DateTime Birthday
+    {
+        get { return this.birthday; }
+        set { this.Set&lt;DateTime&gt;(ref this.birthday, value, &quot;Birthday&quot;); }
+    }
+
+    public ObservableProperty&lt;string&gt; Address
+    {
+        get { return this.address; }
+    }
+}
+
+
+/// &lt;summary&gt;
+/// 数据绑定示例的视图模型
+/// &lt;/summary&gt;
+public class DatabindingViewModel : ViewModelBase
+{
+    private AccountViewModel account;
+    private bool remember;
+    private string username;
+    private string email;
+    private ObservableDictionary&lt;string, string&gt; errors = new ObservableDictionary&lt;string, string&gt;();
+
+    public AccountViewModel Account
+    {
+        get { return this.account; }
+        set { this.Set&lt;AccountViewModel&gt;(ref account, value, &quot;Account&quot;); }
+    }
+
+    public string Username
+    {
+        get { return this.username; }
+        set { this.Set&lt;string&gt;(ref this.username, value, &quot;Username&quot;); }
+    }
+
+    public string Email
+    {
+        get { return this.email; }
+        set { this.Set&lt;string&gt;(ref this.email, value, &quot;Email&quot;); }
+    }
+
+    public bool Remember
+    {
+        get { return this.remember; }
+        set { this.Set&lt;bool&gt;(ref this.remember, value, &quot;Remember&quot;); }
+    }
+
+    public ObservableDictionary&lt;string, string&gt; Errors
+    {
+        get { return this.errors; }
+        set { this.Set&lt;ObservableDictionary&lt;string, string&gt;&gt;(ref this.errors, value, &quot;Errors&quot;); }
+    }
+
+    public void OnUsernameValueChanged(string value)
+    {
+        Debug.LogFormat(&quot;Username ValueChanged:{0}&quot;, value);
+    }
+
+    public void OnEmailValueChanged(string value)
+    {
+        Debug.LogFormat(&quot;Email ValueChanged:{0}&quot;, value);
+    }
+
+    public void OnSubmit()
+    {
+        if (string.IsNullOrEmpty(this.Username) || !Regex.IsMatch(this.Username, &quot;^[a-zA-Z0-9_-]{4,12}$&quot;))
+        {
+            this.errors[&quot;errorMessage&quot;] = &quot;Please enter a valid username.&quot;;
+            return;
+        }
+
+        if (string.IsNullOrEmpty(this.Email) || !Regex.IsMatch(this.Email, @&quot;^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$&quot;))
+        {
+            this.errors[&quot;errorMessage&quot;] = &quot;Please enter a valid email.&quot;;
+            return;
+        }
+
+        this.errors.Clear();
+        this.Account.Username = this.Username;
+        this.Account.Email = this.Email;
+    }
+}
+
+
+/// &lt;summary&gt;
+/// 数据绑定示例视图
+/// &lt;/summary&gt;
+public class DatabindingExample : UIView
+{
+    public Text title;
+    public Text username;
+    public Text password;
+    public Text email;
+    public Text birthday;
+    public Text address;
+    public Text remember;
+
+    public Text errorMessage;
+
+    public InputField usernameEdit;
+    public InputField emailEdit;
+    public Toggle rememberEdit;
+    public Button submit;
+
+    protected override void Awake()
+    {
+        //获得应用上下文
+        ApplicationContext context = Context.GetApplicationContext();
+
+        //启动数据绑定服务
+        BindingServiceBundle bindingService = new BindingServiceBundle(context.GetContainer());
+        bindingService.Start();
+
+        //初始化本地化服务
+        CultureInfo cultureInfo = Locale.GetCultureInfo();
+        var provider = new DefaultDataProvider(&quot;LocalizationTutorials&quot;, new XmlDocumentParser())
+        Localization.Current = Localization.Create(provider, cultureInfo);
+
+    }
+
+    protected override void Start()
+    {
+        //创建账号子视图
+        AccountViewModel account = new AccountViewModel()
+        {
+            ID = 1,
+            Username = &quot;test&quot;,
+            Password = &quot;test&quot;,
+            Email = &quot;yangpc.china@gmail.com&quot;,
+            Birthday = new DateTime(2000, 3, 3)
+        };
+        account.Address.Value = &quot;beijing&quot;;
+
+        //创建数据绑定视图
+        DatabindingViewModel databindingViewModel = new DatabindingViewModel()
+        {
+            Account = account
+        };
+
+        //获得数据绑定上下文
+        IBindingContext bindingContext = this.BindingContext();
+
+        //将视图模型赋值到DataContext
+        bindingContext.DataContext = databindingViewModel;
+
+        //绑定UI控件到视图模型
+        BindingSet&lt;DatabindingExample, DatabindingViewModel&gt; bindingSet;
+        bindingSet = this.CreateBindingSet&lt;DatabindingExample, DatabindingViewModel&gt;();
+
+        //绑定左侧视图到账号子视图模型
+        bindingSet.Bind(this.username).For(v =&gt; v.text).To(vm =&gt; vm.Account.Username).OneWay();
+        bindingSet.Bind(this.password).For(v =&gt; v.text).To(vm =&gt; vm.Account.Password).OneWay();
+        bindingSet.Bind(this.email).For(v =&gt; v.text).To(vm =&gt; vm.Account.Email).OneWay();
+        bindingSet.Bind(this.remember).For(v =&gt; v.text).To(vm =&gt; vm.Remember).OneWay();
+        bindingSet.Bind(this.birthday).For(v =&gt; v.text).ToExpression(vm =&gt; string.Format(&quot;{0} ({1})&quot;,
+         vm.Account.Birthday.ToString(&quot;yyyy-MM-dd&quot;), (DateTime.Now.Year - vm.Account.Birthday.Year))).OneWay();
+        bindingSet.Bind(this.address).For(v =&gt; v.text).To(vm =&gt; vm.Account.Address).OneWay();
+
+        //绑定右侧表单到视图模型
+        bindingSet.Bind(this.errorMessage).For(v =&gt; v.text).To(vm =&gt; vm.Errors[&quot;errorMessage&quot;]).OneWay();
+        bindingSet.Bind(this.usernameEdit).For(v =&gt; v.text, v =&gt; v.onEndEdit).To(vm =&gt; vm.Username).TwoWay();
+        bindingSet.Bind(this.usernameEdit).For(v =&gt; v.onValueChanged).To&lt;string&gt;(vm =&gt; vm.OnUsernameValueChanged);
+        bindingSet.Bind(this.emailEdit).For(v =&gt; v.text, v =&gt; v.onEndEdit).To(vm =&gt; vm.Email).TwoWay();
+        bindingSet.Bind(this.emailEdit).For(v =&gt; v.onValueChanged).To&lt;string&gt;(vm =&gt; vm.OnEmailValueChanged);
+        bindingSet.Bind(this.rememberEdit).For(v =&gt; v.isOn, v =&gt; v.onValueChanged).To(vm =&gt; vm.Remember).TwoWay();
+        bindingSet.Bind(this.submit).For(v =&gt; v.onClick).To(vm =&gt; vm.OnSubmit);
+        bindingSet.Build();
+
+        //绑定标题,标题通过本地化文件配置
+        BindingSet&lt;DatabindingExample&gt; staticBindingSet = this.CreateBindingSet&lt;DatabindingExample&gt;();
+        staticBindingSet.Bind(this.title).For(v =&gt; v.text).To(() =&gt; Res.databinding_tutorials_title).OneTime();
+        staticBindingSet.Build();
+    }
+}
+</code></pre>
+<h3>Lua 示例</h3>
+<p>在Lua示例中，LuaBehaviour脚本是一个通用的脚本，它是由框架提供的，我们只需要编写绑定到这个脚本上的Lua脚本即可，如下图中的DatabindingExample.lua。在LuaBehaviour中，为确保通用性，所有的成员属性也是通过VariableArray属性表来动态定义的，如下图所示。</p>
+<p><img src="images/DatabindingExample_02.png" alt=""></p>
+<p>在Lua脚本DatabindingExample.lua中，上图所有的动态属性都被注册到Lua环境中，我们可以通过self对象来访问所有的属性，请看下面的代码。</p>
+<pre><code>require(&quot;framework.System&quot;)
+
+local Context = CS.Loxodon.Framework.Contexts.Context
+local LuaBindingServiceBundle = CS.Loxodon.Framework.Binding.LuaBindingServiceBundle
+local ObservableObject = require(&quot;framework.ObservableObject&quot;)
+local ObservableDictionary = require(&quot;framework.ObservableDictionary&quot;)
+
+---
+--创建一个Account子视图模型
+--@module AccountViewModel
+local AccountViewModel = class(&quot;AccountViewModel&quot;,ObservableObject)
+
+function AccountViewModel:ctor(t)
+    --执行父类ObservableObject的构造函数，这个重要，否则无法监听数据改变
+    AccountViewModel.base(self).ctor(self,t)
+
+    if not (t and type(t)==&quot;table&quot;) then
+        self.id = 0
+        self.username = &quot;&quot;
+        self.Password = &quot;&quot;
+        self.email = &quot;&quot;
+        self.birthday = os.time({year =1970, month = 00, day =00, hour =00, min =00, sec = 00})
+        self.address = &quot;&quot;
+    end
+end
+
+---
+--创建一个数据绑定示例的视图模型
+--@module DatabindingViewModel
+local DatabindingViewModel = class(&quot;DatabindingViewModel&quot;,ObservableObject)
+
+function DatabindingViewModel:ctor(t)
+    --执行父类ObservableObject的构造函数，这个重要，否则无法监听数据改变
+    DatabindingViewModel.base(self).ctor(self,t)
+
+    if not (t and type(t)==&quot;table&quot;) then
+        self.account = Account()
+        self.remember = false
+        self.username = &quot;&quot;
+        self.email = &quot;&quot;
+        self.errors = ObservableDictionary()
+    end
+
+end
+
+function DatabindingViewModel:submit()
+    if #self.username &lt; 1 then
+        --注意C#字典类型的使用方式，通过set_Item或者get_Item 访问
+        self.errors:set_Item(&quot;errorMessage&quot;,&quot;Please enter a valid username.&quot;)
+        return
+    end
+
+    if #self.email &lt; 1 then
+        --注意C#字典类型的使用方式，通过set_Item或者get_Item 访问
+        self.errors:set_Item(&quot;errorMessage&quot;,&quot;Please enter a valid email.&quot;)
+        return
+    end
+
+    self.errors:Clear()
+
+    self.account.username = self.username
+    self.account.email = self.email
+    self.account.remember = self.remember
+end
+
+---
+--创建一个数据绑定视图,扩展DatabindingExample.cs 对象，这里的target是从C#脚本传过来的
+--@module DatabindingExample
+local M = class(&quot;DatabindingExample&quot;,target)
+
+function M:awake()
+    local context = Context.GetApplicationContext()
+    local container = context:GetContainer()
+
+    --初始化Lua的数据绑定服务，一般建议在游戏的C#启动脚本创建
+    local bundle = LuaBindingServiceBundle(container)
+    bundle:Start();
+end
+
+function M:start()
+    --初始化Account子视图模型
+    local account = AccountViewModel({
+            id = 1,
+            username = &quot;test&quot;,
+            password = &quot;test&quot;,
+            email = &quot;yangpc.china@gmail.com&quot;,
+            birthday = os.time({year =2000, month = 03, day =03, hour =00, min =00, sec = 00}),
+            address = &quot;beijing&quot;,
+            remember = true
+        })
+
+    --初始化视图模型
+    self.viewModel = DatabindingViewModel({
+            account = account,
+            username = &quot;&quot;,
+            email = &quot;&quot;,
+            remember = true,
+            errors = ObservableDictionary()
+        })
+
+    self:BindingContext().DataContext = self.viewModel
+
+    --绑定UI控件到视图模型
+    local bindingSet = self:CreateBindingSet();
+
+    bindingSet:Bind(self.username):For(&quot;text&quot;):To(&quot;account.username&quot;):OneWay()
+    bindingSet:Bind(self.password):For(&quot;text&quot;):To(&quot;account.password&quot;):OneWay()
+    bindingSet:Bind(self.email):For(&quot;text&quot;):To(&quot;account.email&quot;):OneWay()
+    bindingSet:Bind(self.remember):For(&quot;text&quot;):To(&quot;account.remember&quot;):OneWay()
+    bindingSet:Bind(self.birthday):For(&quot;text&quot;):ToExpression(function(vm)
+            return os.date(&quot;%Y-%m-%d&quot;,vm.account.birthday)
+        end ,&quot;account.birthday&quot;):OneWay()
+    bindingSet:Bind(self.address):For(&quot;text&quot;):To(&quot;account.address&quot;):OneWay()
+    bindingSet:Bind(self.errorMessage):For(&quot;text&quot;):To(&quot;errors['errorMessage']&quot;):OneWay()    
+    bindingSet:Bind(self.usernameInput):For(&quot;text&quot;,&quot;onEndEdit&quot;):To(&quot;username&quot;):TwoWay()
+    bindingSet:Bind(self.emailInput):For(&quot;text&quot;,&quot;onEndEdit&quot;):To(&quot;email&quot;):TwoWay()
+    bindingSet:Bind(self.rememberInput):For(&quot;isOn&quot;,&quot;onValueChanged&quot;):To(&quot;remember&quot;):TwoWay()
+    bindingSet:Bind(self.submit):For(&quot;onClick&quot;):To(&quot;submit&quot;):OneWay()
+
+    bindingSet:Build()
+end
+
+return M
+</code></pre>
+<h2>功能介绍</h2>
+<h3>上下文（Context）</h3>
+<p>在很多框架中，我们应该经常看到上下文这个概念，它可以说就是与当前代码运行相关的一个环境，你能在上下文中提供了当前运行需要的环境数据或者服务等。在这里，我根据游戏开发的特点，我提供了应用上下文（ApplicationContext）、玩家上下文（PlayerContext），同时也支持开发人员根据自己的需求来创建其他的上下文。</p>
+<p>在上下文中，我创建了一个服务容器（有关服务容器的介绍请看下一章节）来存储与当前上下文相关的服务，同时创建了个字典来存储数据。通过上下文的Dispose()，可以释放所有在上下文容器中注册的服务。<strong>但是需要注意的是，服务必须继承System.IDisposable接口，否则不能自动释放。</strong></p>
+<h4>应用上下文（ApplicationContext）</h4>
+<p>应用上下文是一个全局的上下文，它是单例的，它主要存储全局共享的一些数据和服务。所有的基础服务，比如视图定位服务、资源加载服务，网络连接服务、本地化服务、配置文件服务、Json/Xml解析服务、数据绑定服务等等，这些在整个游戏中都可能使用到的基础服务都应该注册到应用上下文的服务容器当中，可以通过应用上下文来获得。</p>
+<pre><code>//获得全局的应用上下文
+ApplicationContext context = Context.GetApplicationContext();
+
+//获得上下文中的服务容器
+IServiceContainer container = context.GetContainer();
+
+//初始化数据绑定服务，这是一组服务，通过ServiceBundle来初始化并注册到服务容器中
+BindingServiceBundle bundle = new BindingServiceBundle(context.GetContainer());
+bundle.Start();
+
+//初始化IUIViewLocator，并注册到容器
+container.Register&lt;IUIViewLocator&gt;(new ResourcesViewLocator ());
+
+//初始化本地化服务，并注册到容器中
+CultureInfo cultureInfo = Locale.GetCultureInfo();
+var dataProvider = new ResourcesDataProvider(&quot;LocalizationExamples&quot;, new XmlDocumentParser());
+Localization.Current = Localization.Create(dataProvider, cultureInfo);
+container.Register&lt;Localization&gt;(Localization.Current);
+
+//从全局上下文获得IUIViewLocator服务
+IUIViewLocator locator = context.GetService&lt;IUIViewLocator&gt;();
+
+//从全局上下文获得本地化服务
+Localization localization = context.GetService&lt;Localization&gt;();
+</code></pre>
+<h4>玩家上下文（PlayerContext）</h4>
+<p>玩家上下文是只跟当前登录的游戏玩家相关的上下文，比如一个游戏玩家Clark登录游戏后，他在游戏中的基本信息和与之相关的服务，都应该存储在玩家上下文中。比如背包服务，它负责拉取和同步玩家的背包数据，缓存了玩家背包中的武器、装备、道具等等，它只与当前玩家有关，当玩家退出登录切换账号时，这些数据都应该被清理和释放。我们使用了玩家上下文来存储这些服务和数值时，只需要调用PlayerContext.Dispose()函数，就可以释放与当前玩家有关的所有数据和服务。</p>
+<p>玩家上下文中默认继承了全局上下文的所有服务和属性，所以通过玩家上下文可以获取到所有在全局上下文中的服务和数据，当玩家上下文注册了与全局上下文中Key值相同的服务或者是属性时，它会在玩家上下文中存储，不会覆盖全局上下文中存储的数据，当通过Key访问时，优先返回玩家上下文中的数据，只有在玩家上下文中找不到时才会去全局上下文中查找。</p>
+<pre><code>//为玩家clark创建一个玩家上下文
+PlayerContext playerContext = new PlayerContext(&quot;clark&quot;);
+
+//获得玩家上下文中的服务容器
+IServiceContainer container = playerContext.GetContainer();
+
+//将角色信息存入玩家上下文
+playerContext.Set(&quot;roleInfo&quot;, roleInfo);
+
+//初始化背包服务，注册到玩家上下文的服务容器中
+container.Register&lt;IKnapsackService&gt;(new KnapsackService());
+
+//从通过玩家上下文获得在全局上下文注册的IViewLocator服务
+IUIViewLocator locator = playerContext.GetService&lt;IUIViewLocator&gt;();
+
+//从通过玩家上下文获得在全局上下文注册的本地化服务
+Localization localization = playerContext.GetService&lt;Localization&gt;();
+
+//当用户clark退出登录时，注销玩家上下文，自动注销所有注册在当前玩家上下文中的服务。
+playerContext.Dispose();
+</code></pre>
+<h4>其它上下文（Context）</h4>
+<p>一般来说，在很多游戏开发中，我们只需要全局上下文和玩家上下文就足以满足要求，但是在某些情况下，我们还需要一个上下文来存储环境数据，比如在MMO游戏中，进入某个特定玩法的副本，那么我就需要为这个副本创建一个专属的上下文，当副本中的战斗结束，退出副本时，则销毁这个副本上下文来释放资源。</p>
+<pre><code>//创建一个上下文，参数container值为null，在Context内部会自动创建
+//参数contextBase值为playerContext，自动继承了playerContext中的服务和属性
+Context context = new Context(null,playerContext);
+
+//获得上下文中的服务容器
+IServiceContainer container = context.GetContainer();
+
+//注册一个战斗服务到容器中
+container.Register&lt;IBattleService&gt;(new BattleService());
+</code></pre>
+<h3>服务容器</h3>
+<p>在项目开始时，我曾调研过很多C#的控制反转和依赖注入（IoC/DI）方面的开源项目，开始是想用Zenject来做为服务的容器使用，后来因为考虑到移动项目中，内存和CPU资源都相当宝贵，不想再引入一个这么大的库来消耗内存，也不想因为反射导致的性能损失，而且强制用户使用IoC/DI也不太合适，毕竟不是所有人都喜欢，所以我就自己设计了一个简单的服务容器，来满足服务注册、注销、读取这些最基本的功能。</p>
+<p><strong>注意：所有注册的服务，只有继承System.IDisposable接口，实现了Dispose函数，才能在IServiceContainer.Dispose()时自动释放。</strong></p>
+<h4>服务注册器(IServiceRegistry)</h4>
+<p>服务注册负责注册和注销服务，它可以根据服务类型或者服务名称注册一个服务实例到容器中，也可以注册一个服务工厂到容器中，用户可以根据自己的需求来选择是否需要注册一个服务工厂，是创建一个单态的服务，还是每次都创建一个新的服务实例。</p>
+<pre><code>IServiceContainer container = ...
+IBinder binder = ...
+IPathParser pathParser = ...
+
+//注册一个类型为IBinder的服务到容器中,可以通过container.Resolve&lt;IBinder&gt;() 或者
+//container.Resolve(&quot;IBinder&quot;) 来访问这个服务，在容器中默认使用了typeof(IBinder).Name做为Key存储。   
+container.Register&lt;IBinder&gt;(binder);
+
+//如果需要注册多个IPathParser到容器中，请使用name参数区分
+//在取值时通过name参数取值，如：container.Resolve(&quot;parser&quot;)
+container.Register&lt;IPathParser&gt;(&quot;parser&quot;,pathParser);
+container.Register&lt;IPathParser&gt;(&quot;parser2&quot;,pathParser2);
+</code></pre>
+<h4>服务定位器(IServiceLocator)</h4>
+<p>通过服务定位器可以获得服务，服务定位器可以根据服务名称或者类型来查询服务，当服务以类型的方式注册，则可以通过类型或者类型名来查找服务，当服务以特定的名称为Key注册，则只能通过服务名来查找服务。</p>
+<pre><code>IServiceContainer container = ...
+
+//IBinder服务在上段代码中，以类型方式注册，所以可以通过类型或者名称方式查询服务
+IBinder binder = container.Resolve&lt;IBinder&gt;()；//or container.Resolve(&quot;IBinder&quot;)
+
+//IPathParser在上段代码中以特定名称&quot;parser&quot;注册，则只能通过名称&quot;parser&quot;来查询服务
+IPathParser pathParser = container.Resolve(&quot;parser&quot;);
+</code></pre>
+<h4>服务Bundle(IServiceBundle)</h4>
+<p>ServiceBundle的作用是将一组相关的服务打包注册和注销，比如我的数据绑定服务，就是通过ServiceBundle.Start()方法一次性注册所有数据绑定有关的服务，当服务不在需要时，又可以通过ServiceBundle.Stop()方法来注销整个模块的所有服务（见下面的代码）。这在某些时候非常有用，比如启动和停止一个模块的所有服务。</p>
+<pre><code>//初始化数据绑定模块，启动数据绑定服务,注册服务
+BindingServiceBundle bundle = new BindingServiceBundle(context.GetContainer());
+bundle.Start();
+
+//停止数据绑定模块，注销所有数据绑定相关的服务
+bundle.Stop();
+</code></pre>
+<h3>应用配置（Preference）</h3>
+<p>Perference可以说就是Unity3d的PlayerPrefs，只是我对PlayerPrefs的功能进行了扩展、补充和标准化。Perference除了可以存储boolean、int、 float、string等基本数据类型之外，还可以存储DateTime、Vector2、Vector3、Vector4、Color、Version，以及任何JsonUtility可以序列化的对象类型，甚至你可以自己自定义类型编码解码器（ITypeEncoder）来扩展任何你想存储的类型。Perference支持加密的方式存储数据，并且我实现了两种持久化的方式，第一种是将数据转换为string的方式存储在Unity3D的PlayerPrefs中。第二种是以二进制的方式存储在文件中，一般在项目测试时我都使用文件持久化的方式，因为我可以直接删除Application.persistentDataPath目录下的文件方便的删除配置。</p>
+<p>Perference除了扩展以上功能外，我还扩展了配置的作用域，如同前文中的Context一样，同样包括全局的配置和玩家的配置，也同样支持某个局部模块的配置。全局配置可以用来存放当前资源更新的版本，最后登录的用户名等与应用相关的信息；玩家配置可以存在多个（如果在一台机器上有多个账户登录的话），可以存放具体某个玩家在本机的配置信息，如玩家在游戏中背景音乐、音效、画面质量、视距远近的设置等等。</p>
+<p>下面跟随我的代码，我们来了解它是如何使用的。</p>
+<pre><code>//注册一个Preference的工厂，默认是PlayerPrefsPreferencesFactory工厂，只有使用File持久化才需要改为BinaryFilePreferencesFactory工厂
+Preferences.Register(new BinaryFilePreferencesFactory());
+
+//获得全局配置，如果不存在则自动创建
+Preferences globalPreferences = Preferences.GetGlobalPreferences();
+
+//存储当前资源更新后的数据版本
+globalPreferences.SetObject&lt;Version&gt;(&quot;DATA_VERSION&quot;,dataVersion);
+
+//存储游戏最后成功登录的用户名，下次启动游戏时自动填写在账号输入框中
+globalPreferences.SetString(&quot;username&quot;,&quot;clark&quot;);
+
+//数据修改后调用Save函数保存数据
+globalPreferences.Save();
+
+//根据key值&quot;clark@zone5&quot;获得配置，如果不存在则自动创建，这里的意思是获得游戏第5区名为clark的用户的配置信息
+//在Preferences.GetPreferences()函数中，name只是一个存取的Key，你可以完全按自己的意思组合使用。
+Preferences userPreferences Preferences.GetPreferences(&quot;clark@zone5&quot;);
+
+//设置游戏音乐、音效开关，并保存
+userPreferences.SetBool(&quot;Music_Enable&quot;,true);
+userPreferences.SetBool(&quot;Sound_Enable&quot;,true);
+userPreferences.Save();
+</code></pre>
+<p>在Preferences中，我虽然已支持了很多种的数据类型，但是总有些特殊需求我是无法满足的，那么你通过ITypeEncoder来扩展自己的类型；并且如果你对配置数据的安全性是有要求的，那么你也可以使用自己的密码来加密数据。</p>
+<pre><code>/// &lt;summary&gt;
+/// 自定义一个类型编码器
+/// &lt;/summary&gt;
+public class ColorTypeEncoder : ITypeEncoder
+{
+    private int priority = 900; //当一个类型被多个类型编码器支持时，优先级最高的有效(优先级在-999到999之间)
+
+    public int Priority
+    {
+        get { return this.priority; }
+        set { this.priority = value; }
+    }
+
+    public bool IsSupport(Type type)
+    {
+        if (type.Equals(typeof(Color)))
+            return true;
+        return false;
+    }
+
+    //将string类型转回对象类型
+    public object Decode(Type type, string value)
+    {
+        if (string.IsNullOrEmpty(value))
+            return null;
+
+        Color color;
+        if(ColorUtility.TryParseHtmlString(value,out color))
+            return color;
+
+        return null;
+    }
+
+    //将对象转换为string来保存，因为PlayerPrefs只支持string类型的数据
+    public string Encode(object value)
+    {            
+        return ColorUtility.ToHtmlStringRGBA((Color)value);
+    }
+}
+
+
+//默认使用AES128_CBC_PKCS7加密，当然你也可以自己实现IEncryptor接口，定义自己的加密算法。
+byte[] iv = Encoding.ASCII.GetBytes(&quot;5CyM5tcL3yDFiWlN&quot;);
+byte[] key = Encoding.ASCII.GetBytes(&quot;W8fnmqMynlTJXPM1&quot;);
+
+IEncryptor encryptor = new DefaultEncryptor(key, iv);
+
+//序列化和反序列化类
+ISerializer serializer = new DefaultSerializer();
+
+//添加自定义的类型编码器
+serializer.AddTypeEncoder(new ColorTypeEncoder());
+
+//注册Preferences工厂
+BinaryFilePreferencesFactory factory = new BinaryFilePreferencesFactory(serializer, encryptor);
+Preferences.Register(factory);
+</code></pre>
+<p>更多的示例请查看教程 Basic Tutorials.unity</p>
+<h3>配置文件（Properties文件）</h3>
+<p>在游戏或者应用开发中，配置文件是一个必不可少的东西，通过Properties配置文件来管理游戏或者应用的配置参数，特别现在游戏开发要接入不同的平台，有众多的SDK配置参数，而且不同平台有不同的接入要求，有不同的升级更新策略，需要配置不同的参数，虽然这些配置我们也可以继承Unity3D的ScriptableObject类来创建一个配置类，但是因为接入平台多，参数不统一，随着需求的变化会导致频繁的修改这些配置类，为了避免这种情况，我这里采用传统的Properties配置文件来配置这些参数，一个Properties文件可以满足所有的配置需求。</p>
+<h4>支持的数值类型</h4>
+<p>默认支持以下所有类型和他们的数组类型，通过自定义类型转换器ITypeConverter，可以支持新的数据类型。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">基本类型(Type)</th>
+<th style="text-align:right">默认值(Default Value)</th>
+<th style="text-align:center">描述(Description)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">string</td>
+<td style="text-align:right">&quot;&quot;</td>
+<td style="text-align:center">字符串类型</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean</td>
+<td style="text-align:right">false</td>
+<td style="text-align:center">布尔值，flase或者true</td>
+</tr>
+<tr>
+<td style="text-align:left">sbyte</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">有符号的byte，-127-128</td>
+</tr>
+<tr>
+<td style="text-align:left">byte</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号byte，0-255</td>
+</tr>
+<tr>
+<td style="text-align:left">short</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">short类型</td>
+</tr>
+<tr>
+<td style="text-align:left">ushort</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号short类型</td>
+</tr>
+<tr>
+<td style="text-align:left">int</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">整型</td>
+</tr>
+<tr>
+<td style="text-align:left">uint</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号整型</td>
+</tr>
+<tr>
+<td style="text-align:left">long</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">长整型</td>
+</tr>
+<tr>
+<td style="text-align:left">ulong</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号长整型</td>
+</tr>
+<tr>
+<td style="text-align:left">char</td>
+<td style="text-align:right">‘’</td>
+<td style="text-align:center">字符类型</td>
+</tr>
+<tr>
+<td style="text-align:left">float</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">单精度浮点类型</td>
+</tr>
+<tr>
+<td style="text-align:left">double</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">双精度浮点类型</td>
+</tr>
+<tr>
+<td style="text-align:left">datetime</td>
+<td style="text-align:right">1970-01-01T00:00:00</td>
+<td style="text-align:center">时间类型</td>
+</tr>
+<tr>
+<td style="text-align:left">vector2</td>
+<td style="text-align:right">(0,0)</td>
+<td style="text-align:center">Vector2类型,示例：(0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">vector3</td>
+<td style="text-align:right">(0,0,0)</td>
+<td style="text-align:center">Vector3类型，示例：(0,0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">vector4</td>
+<td style="text-align:right">(0,0,0)</td>
+<td style="text-align:center">Vector4类型，示例：(0,0,0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">color</td>
+<td style="text-align:right">#000000</td>
+<td style="text-align:center">Color类型，示例：#FF0000</td>
+</tr>
+<tr>
+<td style="text-align:left">rect</td>
+<td style="text-align:right">(0,0,0,0)</td>
+<td style="text-align:center">Rect类型，示例：(x,y,width,height)</td>
+</tr>
+<tr>
+<td style="text-align:left">version</td>
+<td style="text-align:right">1.0.0</td>
+<td style="text-align:center">Version类型，示例：1.0.0</td>
+</tr>
+</tbody>
+</table>
+<h4>数组分隔符</h4>
+<p>与CSV格式的本地化配置一样，数组使用半角逗号分隔，在半角的双引号、单引号、小括号()、中括号[]、大括号{}、尖括号&lt;&gt;之间的逗号会被忽略，如数组的字符串中有逗号，请使用双引号或者单引号将字符串引起来。</p>
+<h4>配置文件的组合</h4>
+<p>配置文件支持组合功能，可以将多个配置文件组合成一个配置文件使用。如果你是在开发一个需要发布到多个平台的游戏，并且不同平台之间配置的参数是有差异的，那么你可以有一个默认的配置文件application.properties.txt，在默认配置文件中配置所有需要的参数，然后为Android平台增加&quot;application.android.properties.txt&quot;文件，为ios平台增加&quot;application.ios.properties.txt&quot;文件，在这些文件中，您只需要配置需要修改的项，无需修改的项可以不配置，直接使用默认配置文件中的配置。使用示例如下，先加载配置配置，添加到组合配置文件中，然后加载当前平台的配置到组合配置中，使用时会优先查找平台配置，然后查找默认配置。</p>
+<p><strong>注意：组合配置中如果加入了多个配置文件，后加入的配置优先级越高。</strong></p>
+<pre><code>/* 创建一个组合配置. */
+CompositeConfiguration configuration = new CompositeConfiguration();
+
+/* 加载默认配置文件. */
+string defaultText = FileUtil.ReadAllText(Application.streamingAssetsPath + &quot;/application.properties.txt&quot;);
+configuration.AddConfiguration(new PropertiesConfiguration(defaultText));
+
+#if UNITY_EDITOR
+  string text = FileUtil.ReadAllText(Application.streamingAssetsPath + &quot;/application.editor.properties.txt&quot;);
+#elif UNITY_ANDROID
+  string text = FileUtil.ReadAllText(Application.streamingAssetsPath + &quot;/application.android.properties.txt&quot;);
+#elif UNIYT_IOS
+  string text = FileUtil.ReadAllText(Application.streamingAssetsPath + &quot;/application.ios.properties.txt&quot;);
+#endif
+
+/* 加载当前平台的配置文件. */
+configuration.AddConfiguration(new PropertiesConfiguration(text));
+/* 注册配置文件到容器中 */
+container.Register&lt;IConfiguration&gt;(configuration);
+</code></pre>
+<h4>配置文件的子集</h4>
+<p>除了组合配置功能之外，配置文件还支持配置文件子集的功能，使用时请按功能模块规划好配置文件的Key，以点号分割配置文件的key，这样只要通过一个key的前缀，就可以创建一个配置文件子集。具体使用方式请看下面的示例。</p>
+<h4>配置文件示例</h4>
+<p>Properties文件格式如下，以key = value 的方式配置所有内容，key可以用点号分割，以#开头的是注释文字，空行会被忽略。下文中，我为升级模块配置了四个组，本地组local、开发组develop，预发布组pre-release，发布组release，以及application.config-group = local，也就是说应用可以根据application.config-group的值来读取当前有效的组，这里设置的是local组有效。使用前缀&quot;application.local&quot;可以获得本地组的配置子集,localConfig = config.Subset(&quot;application.local&quot;)。</p>
+<pre><code>#application config
+application.app.version = 1.0.0
+application.data.version = 1.0.0
+
+#gateway     
+application.config-group = local
+
+#local
+application.local.upgrade.url = http://test.your domain name.com/loxodon/framework/upgrade/check
+application.local.username = loxodon.framework
+application.local.password = loxodon.framework
+application.local.gateway = 127.0.0.1:8000 , 192.168.0.30:8000
+
+#develop
+application.develop.upgrade.url = http://test.your domain name.com/loxodon/framework/upgrade/check
+application.develop.username = loxodon.framework
+application.develop.password = loxodon.framework
+application.develop.gateway = 192.168.0.1:8000
+
+#pre-release
+application.pre-release.upgrade.url = http://pre.release.your domain name.com/loxodon/framework/upgrade/check
+application.pre-release.username = loxodon.framework
+application.pre-release.password = loxodon.framework
+application.pre-release.gateway = 172.217.160.78:8000 , 172.217.160.79:8000 , 172.217.160.80:8000
+
+#release
+application.release.upgrade.url = http://release.your domain name.com/loxodon/framework/upgrade/check
+application.release.username = loxodon.framework
+application.release.password = loxodon.framework
+application.release.gateway =  172.217.161.78:8000 , 172.217.161.79:8000 , 172.217.161.80:8000
+</code></pre>
+<p>配置文件读取示例</p>
+<pre><code>//初始化配置文件
+TextAsset text = Resources.Load&lt;TextAsset&gt;(&quot;application.properties&quot;);
+IConfiguration conf = new PropertiesConfiguration(text.text);
+
+//应用版本号
+Version appVersion = conf.GetVersion(&quot;application.app.version&quot;);
+//数据版本号
+Version dataVersion = conf.GetVersion(&quot;application.data.version&quot;);
+
+//当前有效配置组的组名，使用这个组名做为前缀可以获得一个子配置文件
+string groupName = conf.GetString(&quot;application.config-group&quot;);
+
+//根据Key值的前缀 &quot;application.local&quot; 获得配置的子集
+IConfiguration currentGroupConf = conf.Subset(&quot;application.&quot; + groupName);
+
+//通过子集获配置信息，注意key要省略前缀
+string upgradeUrl = currentGroupConf.GetString(&quot;upgrade.url&quot;);
+string username = currentGroupConf.GetString(&quot;username&quot;);
+string password = currentGroupConf.GetString(&quot;password&quot;);
+string[] gatewayArray = currentGroupConf.GetArray&lt;string&gt;(&quot;gateway&quot;);
+</code></pre>
+<h3>国际化和本地化</h3>
+<p>国际化和本地化是指软件、应用、游戏等使之能适应目标市场的语言、地区差异以及技术需要等。所以在游戏开发中，为适用不同的市场需求，本地化是必不可少的功能，我参考了Android的本地化设计思路，设计了本框架的本地化模块。本地化模块和前面提到的任何模块一样，它也是可以自定义的，可以自由扩展的，下面我就来介绍一下如何来使用本地化模块。</p>
+<h4>目录结构</h4>
+<p>本地化文件可以放在Resources目录下，通过Unity3D的Resources来访问，也可以放入AssetBundle中，通过AssetBundle来加载，甚至你可以放入任何其他地方，通过自定义的IDataProvider来读取。并且这些方式可以同时存在，后加载的覆盖先加载的。在本框架中，我提供了DefaultDataProvider和AssetBundleDataProvider两个数据提供器分别来加载Resources中和AssetBundle中的本地化数据文件。无论在Resources中还是在AssetBundle，其目录结构和加载规则是一致的。首先必须有一个本地化配置文件的根目录，如下图的LocalizationExamples目录，在根目录下创建各个语言的目录，比如 default、zh、zh-CN、zh-TW、zh-HK、en、en-US、en-CA、en-AU等等（具体可以参考System.Globalization.CultureInfo类的Name和TwoLetterISOLanguageName，如zh-CN是Name，zh是TwoLetterISOLanguageName）。在default目录中的配置必须是最完整的，它是默认语言配置，而且是必须的，而其他目录都是可选的。zh目录是中文目录，zh-CN是中国大陆的配置目录，zh-TW是台湾区的配置目录，zh-HK是中国香港的配置目录。从配置文件的优先级来说（zh-CN|zh-TW|zh-HK) &gt; zh &gt; default，优先级高的配置将覆盖优先级低的配置。</p>
+<p>在每一个配置文件目录中，配置文件建议按业务模块分多个文件配置，不要所有的配置都写入一个文本文件中，如下图所示，所有全局的配置写入application.xml中，而其他的配置则按模块名称来命名配置文件。</p>
+<p><img src="images/Localization_dir.png" alt=""></p>
+<h4>配置文件的格式</h4>
+<p>配置文件默认支持XML、Asset文件（LocalizationSourceAsset）格式和本地化数据源脚本方式。如有必要也可以通过自定义IDocumentParser来支持其他的格式，如Json格式，csv文件格式，二进制格式，或者从SQLite中加载等。</p>
+<p>精灵(Sprite)、纹理(Texture2D/Texture3D)、字体(Font)、音效(AudioClip)、视频(VideoClip)等属于UnityEngine.Object对象资源只能使用Asset文件格式或者本地化数据源脚本存储。其他可以文本化的资源推荐使用XML或者其他文本文件格式存储。</p>
+<ul>
+<li>
+<p>本地化数据源Asset文件格式(LocalizationSourceAsset)
+本地化数据源Asset文件格式如下图，可以配置多种类型的资源，每一个文件对应一种语言的资源，它的目录规则与XML方式完全一致，唯一不同是文件格式。
+图片、声音等文件都比较占用内存，请按业务模块拆分资源，同一个模块的配置在同一个Asset文件中，在需要使用之前加载到内存，在使用完之后从内存中卸载资源。
+<img src="images/LocalizationSource1.png" alt="">
+<img src="images/LocalizationSource2.png" alt=""></p>
+</li>
+<li>
+<p>本地化数据源脚本方式(LocalizationSourceBehaviour)
+通过本地化数据源脚本挂在GameObject对象上，可以直接存储在Prefab中或场景中，它无法按语言分别存储，所有支持语言的本地化资源都应该配置在同一个脚本文件中。LocalizationSourceBehaviour脚本中自带了DataProvider，当脚本运行会自动加载数据，当对象销毁时又会自动卸载数据。这种方式特别适合与UIView配合使用，当UIView创建时自动加载本地化数据，当UIView关闭时又会释放本地化数据。与Asset文件格式相比，它的优点是可以像一个Unity对象一样使用，拖入场景或者prefab中即可，不需要写脚本来管理它，它的缺点是所配置多个语言版本的数据都会加载到内存中，会占用更多的内存。
+<img src="images/LocalizationSource3.png" alt="">
+<img src="images/LocalizationSource4.png" alt=""></p>
+</li>
+<li>
+<p>XML文件格式
+XML文件格式可以很方便的配置文本类型的数据，但是无法直接配置UnityEngine.Object对象的资源。如果要使用XML配置声音、图片、字体等资源，只能将声音、图片、字体等资源的文件路径配置在XML中，在使用时通过文件路径的改变动态加载这些资源。
+文本类型的本地化不会占用太多内存，建议在游戏启动时全部加载到内存中，并且不要释放它们。
+XML 格式配置如下:</p>
+<pre><code>&lt;!-- application.xml --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;string name=&quot;app.name&quot;&gt;Loxodon Framework Examples&lt;/string&gt;
+    &lt;string name=&quot;framework.name&quot;&gt;LoxodonFramework&lt;/string&gt;
+    &lt;vector3 name=&quot;user.position&quot;&gt;(20 , 20.2 , 30)&lt;/vector3&gt;
+    &lt;color name=&quot;color.black&quot;&gt;#000000&lt;/color&gt;
+    &lt;color-array name=&quot;button.transition.colors&quot;&gt;
+        &lt;item&gt;#FFFFFFFF&lt;/item&gt;
+        &lt;item&gt;#F5F5F5FF&lt;/item&gt;
+        &lt;item&gt;#C8C8C8FF&lt;/item&gt;
+        &lt;item&gt;#C8C8C880&lt;/item&gt;
+    &lt;/color-array&gt;
+    &lt;datetime name=&quot;created&quot;&gt;2016-10-27T00:00:00.000&lt;/datetime&gt;
+&lt;/resources&gt;
+
+&lt;!-- module.xml --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;string name=&quot;startup.progressbar.tip.loading&quot;&gt;Loading...&lt;/string&gt;
+    &lt;string name=&quot;startup.progressbar.tip.unziping&quot;&gt;Unziping...&lt;/string&gt;
+    &lt;string name=&quot;login.failure.tip&quot;&gt;Login failure.&lt;/string&gt;
+    &lt;string name=&quot;login.exception.tip&quot;&gt;Login exception.&lt;/string&gt;
+    &lt;string name=&quot;login.validation.username.error&quot;&gt;Please enter a valid username.&lt;/string&gt;
+    &lt;string name=&quot;login.validation.password.error&quot;&gt;Please enter a valid password.&lt;/string&gt;
+    &lt;string name=&quot;login.label.title.text&quot;&gt;Sign in&lt;/string&gt;
+    &lt;string name=&quot;login.button.confirm.text&quot;&gt;Confirm&lt;/string&gt;
+    &lt;string name=&quot;login.button.cancel.text&quot;&gt;Cancel&lt;/string&gt;
+    &lt;string name=&quot;login.label.username.text&quot;&gt;Username:&lt;/string&gt;
+    &lt;string name=&quot;login.label.password.text&quot;&gt;Password:&lt;/string&gt;
+    &lt;string name=&quot;login.input.username.prompt&quot;&gt;Enter username...&lt;/string&gt;
+    &lt;string name=&quot;login.input.password.prompt&quot;&gt;Enter password...&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+</li>
+</ul>
+<h4>XML特殊字符</h4>
+<p>在XML的名称、属性和本文内容中，&quot;&lt;&quot;、&quot;&gt;&quot;、&quot;&amp;&quot;等字符是不能直接使用的，如果在一个XML标记中出现这些字符，XML的解析会报错，如果我们使用的内容必须包括这些字符，有两种解决方式，第一是使用转义字符，如前文中的三个字符可以使用&quot;&amp;lt;&quot;、&quot;&amp;gt;&quot;、&quot;&amp;amp;&quot;来替换。第二种方式是使用&lt;![CDATA[]]&gt;标记将文本内容包起来，比如&lt;![CDATA[&lt;color=#FF0000&gt;This is a test.&lt;/color&gt;]]&gt;，它表示的文本内容是“&lt;color=#FF0000&gt;This is a test &lt;/color&gt;”。一般来说推荐使用&lt;![CDATA[]]&gt;标记。</p>
+<p><strong>转义字符表</strong></p>
+<p><img src="images/xml_special_chars.png" alt=""></p>
+<p><strong>转义字符或者&lt;![CDATA[]]&gt;示例</strong></p>
+<pre><code>&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;string name=&quot;mainpage.title&quot;&gt;&lt;![CDATA[This text is &lt;color=#FF0000&gt;red&lt;/color&gt;]]&gt;&lt;/string&gt;
+    &lt;string name=&quot;mainpage.text&quot;&gt;This text is &amp;lt;color=#FF0000&amp;gt;red&amp;lt;/color&amp;gt;&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+<h4>XML支持的数值类型</h4>
+<p>默认支持以下所有类型和他们的数组类型，通过自定义类型转换器ITypeConverter，可以支持新的数据类型。</p>
+<p>数组类型的表述方式是在基本类型后面添加&quot;-array&quot;的后缀，如前文中字符串数组类型：string-array，在&lt;string-array&gt;&lt;/string-array&gt;之间用&lt;item&gt;&lt;item&gt;添加数组元素。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">基本类型(Type)</th>
+<th style="text-align:right">默认值(Default Value)</th>
+<th style="text-align:center">描述(Description)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">string</td>
+<td style="text-align:right">&quot;&quot;</td>
+<td style="text-align:center">字符串类型</td>
+</tr>
+<tr>
+<td style="text-align:left">boolean</td>
+<td style="text-align:right">false</td>
+<td style="text-align:center">布尔值，flase或者true</td>
+</tr>
+<tr>
+<td style="text-align:left">sbyte</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">有符号的byte，-127-128</td>
+</tr>
+<tr>
+<td style="text-align:left">byte</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号byte，0-255</td>
+</tr>
+<tr>
+<td style="text-align:left">short</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">short类型</td>
+</tr>
+<tr>
+<td style="text-align:left">ushort</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号short类型</td>
+</tr>
+<tr>
+<td style="text-align:left">int</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">整型</td>
+</tr>
+<tr>
+<td style="text-align:left">uint</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号整型</td>
+</tr>
+<tr>
+<td style="text-align:left">long</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">长整型</td>
+</tr>
+<tr>
+<td style="text-align:left">ulong</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">无符号长整型</td>
+</tr>
+<tr>
+<td style="text-align:left">char</td>
+<td style="text-align:right">‘’</td>
+<td style="text-align:center">字符类型</td>
+</tr>
+<tr>
+<td style="text-align:left">float</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">单精度浮点类型</td>
+</tr>
+<tr>
+<td style="text-align:left">double</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">双精度浮点类型</td>
+</tr>
+<tr>
+<td style="text-align:left">decimal</td>
+<td style="text-align:right">0</td>
+<td style="text-align:center">数字类型</td>
+</tr>
+<tr>
+<td style="text-align:left">datetime</td>
+<td style="text-align:right">1970-01-01T00:00:00</td>
+<td style="text-align:center">时间类型</td>
+</tr>
+<tr>
+<td style="text-align:left">vector2</td>
+<td style="text-align:right">(0,0)</td>
+<td style="text-align:center">Vector2类型,示例：(0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">vector3</td>
+<td style="text-align:right">(0,0,0)</td>
+<td style="text-align:center">Vector3类型，示例：(0,0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">vector4</td>
+<td style="text-align:right">(0,0,0)</td>
+<td style="text-align:center">Vector4类型，示例：(0,0,0,0)</td>
+</tr>
+<tr>
+<td style="text-align:left">color</td>
+<td style="text-align:right">#000000</td>
+<td style="text-align:center">Color类型，示例：#FF0000</td>
+</tr>
+<tr>
+<td style="text-align:left">rect</td>
+<td style="text-align:right">(0,0,0,0)</td>
+<td style="text-align:center">Rect类型，示例：(x,y,width,height)</td>
+</tr>
+</tbody>
+</table>
+<h4>生成C#脚本</h4>
+<p>本地化配置的属性，类似Android配置一样，可以生成一个静态类来使用，如果是使用C#版本的MVVM，可以这么使用，这样增加了语言的编译校验机制，避免出错。如果是使用Lua编程，则不建议这么做，直接使用Localization类即可。</p>
+<p>在本地化配置的根目录右击，弹出代码生成菜单如下图，点击Localization Make，选择代码目录和文件名，生成C#静态类。</p>
+<p><img src="images/Localization_Make.png" alt=""></p>
+<pre><code>public static partial class R
+{
+    public readonly static V&lt;string&gt; startup_progressbar_tip_loading = new V&lt;string&gt;(&quot;startup.progressbar.tip.loading&quot;);
+
+    public readonly static V&lt;string&gt; startup_progressbar_tip_unziping = new V&lt;string&gt;(&quot;startup.progressbar.tip.unziping&quot;);
+
+    public readonly static V&lt;string&gt; login_failure_tip = new V&lt;string&gt;(&quot;login.failure.tip&quot;);
+
+    public readonly static V&lt;string&gt; login_exception_tip = new V&lt;string&gt;(&quot;login.exception.tip&quot;);
+}
+</code></pre>
+<h4>本地化视图组件</h4>
+<ul>
+<li>
+<p><strong>文字的本地化</strong></p>
+<p>支持在UnityEngine.UI.Text或者UnityEngine.TextMesh对象上挂一个脚本，配置本地化字符串的key，就可以自动支持多语言的切换，如果仅仅只是显示文本，不会随业务逻辑改变，支持使用这种方式配置。当然也可以通过数据绑定的方式来更新Text或者TextMesh的文字，在ViewModel中修改文字，则视图中的文字跟着改变。</p>
+<p><img src="images/Localization_Text.png" alt=""></p>
+</li>
+<li>
+<p><strong>图片、声音、视频、字体、材质的本地化</strong></p>
+<p>图片、声音、视频、字体、材质资源的本地化推荐使用Asset文件配置（LocalizationSourceAsset），将不同语言版本的资源配置按业务模块分类配置在不同的Asset文件中，比如当需要访问某个业务模块的UI时，先加载这个模块当前语言版本的本地化资源，然后再显示UI。</p>
+<p>当然，除了使用Asset文件配置的方式，也可以使用XML等文本方式配置，将资源的加载路径配置在XML文件中，当语言改变时，图片或者声音的路径也会改变，通过视图脚本异步加载资源，然后替换资源，这种方式很灵活但是需要自己写代码来实现加载逻辑，图片、声音、字体等本地化资源可以放在Resources中或者AssetBundle中，也可以是精灵图集等，我无法写一个满足全部功能的脚本，只能提供了从Resources中加载声音或者图片的组件（如：LocalizedAudioSourceInResources.cs），可以参考我的组件实现更多方式。</p>
+<p>如下示例是使用我的Loxodon.Framework.Bundle插件加载音效的代码。</p>
+<pre><code>  [RequireComponent(typeof(AudioSource))]
+  public class LocalizedAudioSource : AbstractLocalized&lt;AudioSource&gt;
+  {
+      private IResources resources;
+      private void Awake()
+      {
+          Context context = Context.GetApplicationContext();
+          this.resources = context.GetService&lt;IResources&gt;();
+      }
+
+      protected override void OnValueChanged(object sender, EventArgs e)
+      {
+          string path = (string)this.value.Value;
+          var result = resources.LoadAssetAsync&lt;AudioClip&gt;(path);
+          result.Callbackable().OnCallback(r =&gt;
+          {
+              if (r.Exception != null)
+                  return;
+
+              this.target.clip = r.Result;
+          });
+      }
+  }
+</code></pre>
+<p>下图是使用LocalizedAudioSourceInResources从Resources中加载音效的示例。</p>
+<p><img src="images/Localization_Audio.png" alt=""></p>
+</li>
+<li>
+<p><strong>UI尺寸大小、颜色的本地化</strong></p>
+<p>本地化组件支持Rect、Color、Vector2-4等类型，除了图片、声音、文字的本地化之外，UI视图的尺寸大小、位置、颜色等也可以本地化。特别是UI尺寸的本地化，可以更好的适配不同语言文字长度不一致的需求。</p>
+<p>关于RectTransform的设置与锚点位置有关，以下代码仅仅是一个示例，请根据自己的实际情况修改。</p>
+<pre><code>  public class LocalizedRectTransform : AbstractLocalized&lt;RectTransform&gt;
+  {
+      protected override void OnValueChanged(object sender, EventArgs e)
+      {
+          RectTransform rectTransform = this.target;
+          if (this.value.Value is Vector2[])
+          {
+              Vector2[] vectors = (Vector2[])this.value.Value;
+              rectTransform.offsetMin = vectors[0];
+              rectTransform.offsetMax = vectors[1];
+              return;
+          }
+
+          if (this.value.Value is Rect)
+          {
+              Rect rect = (Rect)this.value.Value;
+              rectTransform.anchoredPosition = new Vector2(rect.x, rect.y);
+              rectTransform.sizeDelta = new Vector2(rect.width, rect.height);               
+              return;
+          }
+      }
+  }
+</code></pre>
+<p>本地化配置如下：</p>
+<pre><code>  &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+  &lt;resources&gt;
+    &lt;vector2-array name=&quot;button.position&quot;&gt;
+      &lt;item&gt;(100,50)&lt;/item&gt;
+      &lt;item&gt;(-100,-50)&lt;/item&gt;
+    &lt;/vector2-array&gt;
+    &lt;rect name=&quot;button.position2&quot;&gt;(100,100,200,60)&lt;/rect&gt;
+  &lt;/resources&gt;
+</code></pre>
+</li>
+</ul>
+<h4>本地化数据绑定器(LocalizedDataBinder)</h4>
+<p>使用本地化数据绑定器可以对Text、TextMesh、Image、RawImage、SpriteRenderer、AudioSource、VideoPlayer等等的属性和本地化数据进行批量的绑定，它使用数据绑定服务来工作的，在使用它之前必须初始化数据绑定服务。在有上述UI控件的游戏节点上添加LocalizedDataBinder脚本，就可以对控件的属性进行绑定。具体绑定方式如下图，For参数选择需要绑定的属性，To参数填写本地化数据配表中的Key值。</p>
+<p><img src="images/LocalizedDataBinder.png" alt=""></p>
+<p>下图是本地化资源，它是通过Localization Source的方式配置的，当然，你也可以使用XML或者CSV的文件格式配置。
+<img src="images/LocalizationData.png" alt=""></p>
+<h4>数据提供器(IDataProvider)</h4>
+<p>框架的本地化组件支持同时使用多种数据格式来配置本地化资源，它们有不同的文件格式，不同的目录结构，甚至有不同的文件查找规则，无论情况多么复杂，都可以通过数据提供器(IDataProvider)和文档解析器(IDocumentParser)来统一它们，通过数据提供器加载数据，通过文档解析器解析资源文件，在框架中我提供了一些默认的数据加载器，可以从Resources目录或者AssetBundle中根据前文中提到的目录规则来加载本地化数据。如果需要支持更多的数据格式，或者要定制文件查找规则和加载方式，请参考我的代码实现自定义的数据提供器。
+以下的代码是使用默认的数据提供器从Resources/LocalizationTutorials/（教程本地化资源的根目录，目录结构如下图）目录中加载xml和asset格式的文件，xml格式的文件使用DefaultDataProvider加载，它会加载目录中当前语言的所有xml文件，文本文件占用较少的内存，不需要释放它们。asset格式的文件使用DefaultLocalizationSourceDataProvider加载，它的构造函数需要提供具体的asset文件名列表，它只会加载名字列表中的文件，asset文件中配置图片声音等多媒体资源，会占用较多的内存，在使用完毕请从Localization中删除DefaultLocalizationSourceDataProvider来卸载本地化资源。
+<img src="images/Localization_dir2.png" alt=""></p>
+<pre><code>var localization = Localization.Current;
+localization.CultureInfo = new CultureInfo(&quot;en-US&quot;); //设置语言
+//添加一个默认的XML数据加载器，从Resources/LocalizationTutorials 目录中加载本地化资源
+//按（zh-CN|zh-TW|zh-HK) &gt; zh &gt; default 的规则加载文件，如果不满足要求可以自定义数据加载器
+//文本资源不占用太多内存，默认加载当前语言的所有xml文件   
+localization.AddDataProvider(new DefaultDataProvider(&quot;LocalizationTutorials&quot;, new XmlDocumentParser()));
+
+//添加一个Asset数据的加载器，从Resources/LocalizationExamples 目录中加载文件名为LocalizationModule.asset的资源
+//Asset类型的资源请在使用前加载，并且在不需要的时候释放它们
+var provider = new DefaultLocalizationSourceDataProvider(&quot;LocalizationTutorials&quot;,&quot;LocalizationModule.asset&quot;);
+localization.AddDataProvider(provider);
+
+//当数据不在被使用时，删除数据加载器，同时释放内存
+localization.RemoveDataProvider(provider);
+</code></pre>
+<h4>获得设备的当前语言</h4>
+<p>在Unity3D较老的版本中，CultureInfo.CurrentCulture是无效的，无论在PC还是移动设备，都获得英文语言信息，所以我提供了Unity的SystemLanguage转CultureInfo的工具Locale，可以通过Locale.GetCultureInfo()来获得当前语言信息，通过Locale.CultureInfo GetCultureInfoByLanguage(SystemLanguage.Chinese)来获得中文的CultureInfo。
+在Unity 2018版本中，使用.net standard 2.0时，我在Android手机上测试，CultureInfo.CurrentCulture是有效的，所以使用2018版本开发的同学可以使用CultureInfo.CurrentCulture来获得当前系统的语言信息。</p>
+<h4>使用示例</h4>
+<p>前文介绍了本地化组件的一些功能，这里通过示例，我们来了解本地化组件的使用。</p>
+<p>下面的示例是如何在C#代码中使用本地化功能，通过生成的C#静态类R或者通过Localization类获得本地化字符串。</p>
+<pre><code>var localization = Localization.Current;
+localization.CultureInfo = CultureInfo.CurrentCulture; //设置语言,老版本用Locale.GetCultureInfo()
+localization.AddDataProvider(new DefaultDataProvider(&quot;LocalizationTutorials&quot;, new XmlDocumentParser()));
+
+//通过Localization的成员方法调用
+string errorMessage = localization.GetText(&quot;login.validation.username.error&quot;, &quot;Please enter a valid username.&quot;);
+
+//通过生成的静态代码调用（Loxodon/Localization Make 生成C#代码，看上文生成C#代码章节）
+string loadingMessage = R.startup_progressbar_tip_loading;
+
+//获得本地化配置的子集，通过子集访问
+ILocalization localizationSubset = localization.Subset(&quot;login&quot;);
+errorMessage = localizationSubset.GetText(&quot;validation.username.error&quot;, &quot;Please enter a valid username.&quot;);
+
+//通过数据绑定使用，请使用localization.GetValue()获得ObservableProperty，支持值改变的通知
+bindingSet.Bind(target).For(v=&gt;v.text)
+    .ToValue(localization.GetValue(&quot;login.validation.username.error&quot;)).OneWay();
+</code></pre>
+<p>配合UI组件使用本地化配置，下面我们模拟一个游戏中语言切换的使用场景，来了解本地化模块的用法。在下图中，红色线框中的英文通过本地化服务来加载和修改，它是通过挂在Text对象上的LocalizedText组件来实现中文和英文切换的。</p>
+<p><img src="images/Localization_Example.png" alt=""></p>
+<pre><code>public class LocalizationExample : MonoBehaviour
+{
+    public Dropdown dropdown;
+
+    private Localization localization;
+
+    void Awake ()
+    {
+        CultureInfo cultureInfo = Locale.GetCultureInfoByLanguage (SystemLanguage.English);
+
+        //创建一个数据提供器，从LocalizationTutorials目录中加载本地化文件
+        var dataProvider = new DefaultDataProvider (&quot;LocalizationTutorials&quot;, new XmlDocumentParser ())；
+
+        //创建一个本地化服务
+        Localization.Current = Localization.Create (dataProvider, cultureInfo);
+        this.localization = Localization.Current;
+
+        //监听下拉列表的改变，在英文和中文间切换
+        this.dropdown.onValueChanged.AddListener (OnValueChanged);
+    }
+
+    void OnValueChanged (int value)
+    {
+        switch (value) {
+        case 0:
+            //设置本地化服务当前语言为英文
+            this.localization.CultureInfo = Locale.GetCultureInfoByLanguage (SystemLanguage.English);
+            break;
+        case 1:
+            //设置本地化服务当前语言为中文
+            this.localization.CultureInfo = Locale.GetCultureInfoByLanguage (SystemLanguage.ChineseSimplified);
+            break;
+        default:
+            //设置本地化服务当前语言为英文
+            this.localization.CultureInfo = Locale.GetCultureInfoByLanguage (SystemLanguage.English);
+            break;
+        }
+    }
+
+    void OnDestroy ()
+    {
+        this.dropdown.onValueChanged.RemoveListener (OnValueChanged);
+    }
+}
+</code></pre>
+<p>本地化文件配置如下</p>
+<pre><code>&lt;!-- 英文版 --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;string name=&quot;app.name&quot;&gt;LoxodonFramework&lt;/string&gt;
+    &lt;string name=&quot;databinding.tutorials.title&quot;&gt;Databinding Examples&lt;/string&gt;
+    &lt;string name=&quot;localization.tutorials.content&quot;&gt;People's living, the book is dead,
+        the living dead reading, can take the book to read. dead books read living,
+        people reading can be put to death.&lt;/string&gt;
+&lt;/resources&gt;
+
+&lt;!-- 中文版 --&gt;
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;resources&gt;
+    &lt;string name=&quot;app.name&quot;&gt;LoxodonFramework&lt;/string&gt;
+    &lt;string name=&quot;databinding.tutorials.title&quot;&gt;数据绑定示例&lt;/string&gt;
+    &lt;string name=&quot;localization.tutorials.content&quot;&gt;人是活的，书是死的，活人读死书，可以把书读活。
+    死书读活人，可以把人读死。&lt;/string&gt;
+&lt;/resources&gt;
+</code></pre>
+<p>更多的示例请查看教程 Localization Tutorials.unity</p>
+<h4>支持CSV格式的本地化插件</h4>
+<p>如果习惯使用Excel的朋友可以下载我的CSV插件，它支持读取CSV文件格式的本地化配置，但是要求Unity版本在2018以上，支持.net 4.x或者.net standard 2.0。</p>
+<p>下载地址：<a href="https://github.com/vovgou/loxodon-framework/releases">Loxodon Framework Localization For CSV</a></p>
+<p><strong>配置文件格式如下</strong></p>
+<ul>
+<li>key：配置文件的key，不能为空，此列必须存在。</li>
+<li>type：配置文件值的类型，此列必须存在。如：字符串类型 string ，整形数组 int-array</li>
+<li>description:描述，可以为空，并且此列可以省略</li>
+<li>default：默认值，最好不要为空,如果此列不存在，则会使用值的第一列作为默认列</li>
+<li>zh:中文配置，zh取值自CultureInfo.TwoLetterISOLanguageName，如果字段为空则使用默认配置</li>
+<li>zh-CN：中国，简体中文配置,zh-CN取值自CultureInfo.Name，如果字段为空，则使用zh的配置</li>
+</ul>
+<p>以上只有key列和type列是必须存在的，其他可以根据实际情况添加或者省略。</p>
+<p><strong>关于值的本地化查询规则是根据System.Globalization.CultureInfo类的TwoLetterISOLanguageName和Name字段来查询的。
+优先按CultureInfo.Name查询，如果不存在则使用CultureInfo.TwoLetterISOLanguageName查询，最后才会使用默认值，比如下图中，如果当前语言是zh-CN的话，优先使用zh-CN的配置，如果不存在zh-CN的列或者zh-CN配置为空，则使用zh列的配置，如果zh列不存在或者字段为空则使用默认列的配置。</strong></p>
+<p><img src="images/csv.png" alt=""></p>
+<p><strong>文件编码</strong></p>
+<p>如果文件中包含中文，请确保CSV文件使用UTF-8编码，否则在文件转换时可能出现乱码，使用WPS从excel文件导出为csv文件时，请重点检查编码格式是否为UTF-8编码(可以使用记事本或者EditPlus查看)。</p>
+<p><strong>支持类型和数组的表示</strong></p>
+<p>CSV配置同样支持上一节中XML配置所支持的所有基本数据类型，支持单元格内换行符，唯一不同的是CSV文件中使用逗号分隔符来支持数组类型，如下表所示。</p>
+<p><strong>注意：数组使用半角逗号分隔，在半角的双引号、单引号、小括号()、中括号[]、大括号{}、尖括号&lt;&gt;之间的逗号会被忽略，如数组的字符串中有逗号，请使用双引号或者单引号将字符串引起来,否则在数组分隔时会出错</strong></p>
+<table>
+<thead>
+<tr>
+<th style="text-align:left">key</th>
+<th style="text-align:right">type</th>
+<th style="text-align:center">us-EN</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left">usernames</td>
+<td style="text-align:right">string-array</td>
+<td style="text-align:center">tom,clark,kate</td>
+</tr>
+<tr>
+<td style="text-align:left">chars</td>
+<td style="text-align:right">string-array</td>
+<td style="text-align:center">&quot;a,b,c&quot;,&quot;d,e,f&quot;,&quot;g,h,i&quot;</td>
+</tr>
+<tr>
+<td style="text-align:left">positions</td>
+<td style="text-align:right">vector3-array</td>
+<td style="text-align:center">(0,1,1.2),(2,2,0),(1.3,0.5,5)</td>
+</tr>
+<tr>
+<td style="text-align:left">colors</td>
+<td style="text-align:right">color-array</td>
+<td style="text-align:center">#FF0000,#00FF00</td>
+</tr>
+</tbody>
+</table>
+<p><strong>XML和CSV的相互转换</strong></p>
+<p>XML的配置文件和CSV的配置文件可以相互转换，但是对于数组类型的配置需要注意，在CSV中是使用&quot;,&quot;分割的，而在XML中是&lt;item&gt;标识分割的，在&lt;item&gt;&lt;/item&gt;之间如果包含了&quot;,&quot;转换为csv文件格式时可能出错。</p>
+<p>选择XML配置文件的根目录，右键选择Loxodon/Xml To Csv 命令，会自动将目录下的所有xml文件转换为csv格式的文件，XML中不同语言版本会合并到同一个csv文件中。同样，CSV文件也可以转换为XML文件，如果CSV文件中包含多个语言的配置版本，会被拆分成多个XML文件。</p>
+<p><img src="images/xml2csv.png" alt=""></p>
+<p>生成csv文件如下</p>
+<p><img src="images/xml2csv2.png" alt=""></p>
+<p><strong>文件示例</strong></p>
+<p>CSV源文件</p>
+<p><img src="images/csv_source.png" alt=""></p>
+<p>转换为XML文件格式后的中文本地化文件（魔兽世界、星际争霸、帝国时代后面的换行符仍然存在，只是不可见）。</p>
+<p><img src="images/csv2xml.png" alt=""></p>
+<h3>日志系统</h3>
+<p>框架提供了一个可分级的日志系统，它支持ALL、DEBUG、INFO、WARN、ERROR、FATAL等多个级别，在项目在开发阶段和发布上线可以使用不同的日志打印级别。</p>
+<p>日志系统我提供了一个Unity3D的Debug版本的实现，它基本满足了一般的开发和调试需求，但是如果需要更强的日志功能，比如打印日志到文件系统，移动终端通过局域网将日志打印到电脑等，可以下载我的日志插件<a href="https://github.com/vovgou/loxodon-framework.git?path=Loxodon.Framework.Log4Net">Loxodon.Framework.Log4Net</a>，它是一个用Log4Net实现的插件，功能非常强大。</p>
+<p>默认日志系统的使用示例</p>
+<pre><code>//设置默认日志系统的日志级别，默认日志工厂自动初始化
+LogManager.Default.Level = Level.DEBUG
+
+//如果是一个自定义的日志实现，可以如下方式来初始化
+DefaultLogFactory factory = new DefaultLogFactory();
+factory.Level = Level.ALL
+LogManager.Registry(factory)
+
+//为类AsyncResult，定义一个ILog
+private static readonly ILog log = LogManager.GetLogger(typeof(AsyncResult));
+
+//打印日志
+log.DebugFormat(&quot;My name is {0}&quot;,name)
+</code></pre>
+<h3>StreamingAssets目录文件读取（Android）</h3>
+<p>在Android平台上，StreamingAssets目录在apk压缩包中，所以无法通过C#文件系统的API直接访问。请使用我的 Loxodon.Framework.Utilities.FileUtil替换C#的File类读取文件，我提供了JNI调用java接口的方式访问，具体实现在FileUtil.Android.cs中，它的局限是只能读apk中的文件，无法读取obb文件中的资源。如果拆分了obb包，请使用FileUtil.Compression.cs 或者 FileUtil.IonicZip.cs 中的实现。FileUtil.Compression.cs 使用的是.net standard 2.0 中的自带的解压功能实现，需要Unity2018及以上版本。FileUtil.IonicZip.cs是使用IonicZip的压缩库实现，使用.net 3.5的库请使用这个版本，使用该版本需要自己找IonicZip.dll放入项目，并且在Unity项目中配置宏定义IONIC_ZIP。</p>
+<h3>线程/协程异步结果和异步任务</h3>
+<p>为了方便协程和线程的异步调用，我根据Future/Promise的设计模式，设计一组异步结果、异步任务，在使用时我们可以通过同步的方式来获得任务的执行结果，也可以通过回调的方式来获得任务的结果，跟随下面的示例，我们来了解异步结果的使用。</p>
+<h4>AsyncResult</h4>
+<p>利用AsyncResult，我们来创建一个可以取消的协程任务，并分别通过同步阻塞的方式和回调的方式来获得执行结果。</p>
+<pre><code>public class AsyncResultExample : MonoBehaviour
+{
+
+    protected IEnumerator Start ()
+    {
+        //********启动任务，同步方式调用示例***********//
+        IAsyncResult&lt;bool&gt; result = StartTask();
+
+        //等待任务完成，result.WaitForDone ()函数返回一个迭代器IEnumerator
+        yield return result.WaitForDone ();
+
+        if(r.Exception !=null)
+        {
+            Debug.LogFormat(&quot;任务执行失败：{0}&quot;,r.Exception);
+        }
+        else
+        {    
+            Debug.LogFormat(&quot;任务执行成功 result = {0}&quot;,r.Result);
+        }
+
+
+        //********启动任务，回调方式调用示例***********//
+        result = StartTask();
+        result.Callbackable().OnCallback((r) =&gt;
+        {
+            if(r.Exception !=null)
+            {
+                Debug.LogFormat(&quot;任务执行失败：{0}&quot;,r.Exception);
+            }
+            else
+            {    
+                Debug.LogFormat(&quot;任务执行成功 result = {0}&quot;,r.Result);
+            }
+        });
+
+    }
+
+    //创建一个任务
+    public IAsyncResult&lt;bool&gt; StartTask()
+    {
+        //创建一个异步结果，参数cancelable = true，支持取消操作
+        AsyncResult&lt;bool&gt; result = new AsyncResult&lt;bool&gt; (true);
+
+        //启动任务
+        this.StartCoroutine (DoTask (result));
+
+        return result;
+    }
+
+    /// &lt;summary&gt;
+    /// 模拟一个任务
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The task.&lt;/returns&gt;
+    /// &lt;param name=&quot;promise&quot;&gt;Promise.&lt;/param&gt;
+    protected IEnumerator DoTask (IPromise&lt;bool&gt; promise)
+    {
+        for (int i = 0; i &lt; 20; i++) {
+            //如果外部调用了AsyncResult.Cancel()函数，则这里的IsCancellationRequested = true，请求取消任务
+            if (promise.IsCancellationRequested) {        
+                promise.SetCancelled ();
+                yield break;
+            }
+            yield return new WaitForSeconds (0.5f);
+        }
+
+        //执行完成必须设置结果
+        promise.SetResult (true);
+    }
+}
+</code></pre>
+<h4>ProgressResult</h4>
+<p>ProgressResult与AsyncResult功能类似，只是增加了任务进度，下面我来看示例。</p>
+<pre><code>/// &lt;summary&gt;
+/// 任务进度
+/// &lt;/summary&gt;
+public class Progress
+{
+    public int bytes;
+    public int TotalBytes;
+
+    public int Percentage { get { return (bytes * 100) / TotalBytes; } }
+}
+
+public class ProgressResultExample : MonoBehaviour
+{
+    protected void Start()
+    {
+        //开始一个任务
+        IProgressResult&lt;Progress, string&gt; result = StartTask();
+
+        //打印任务进度
+        result.Callbackable().OnProgressCallback(progress =&gt;
+        {
+            Debug.LogFormat(&quot;Percentage: {0}% &quot;, progress.Percentage);
+        });
+
+        //监听任务结果
+        result.Callbackable().OnCallback(r =&gt;
+        {
+            Debug.LogFormat(&quot;IsDone:{0} Result:{1}&quot;, r.IsDone, r.Result);
+        });
+    }
+
+    public IProgressResult&lt;Progress, string&gt; StartTask()
+    {
+        ProgressResult&lt;Progress, string&gt; result = new ProgressResult&lt;Progress, string&gt;(true);
+
+        this.StartCoroutine(DoTask(result));
+
+        return result;
+    }
+
+    /// &lt;summary&gt;
+    /// 模拟一个有进度的任务
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The task.&lt;/returns&gt;
+    /// &lt;param name=&quot;promise&quot;&gt;Promise.&lt;/param&gt;
+    protected IEnumerator DoTask(IProgressPromise&lt;Progress, string&gt; promise)
+    {
+        int n = 50;
+        Progress progress = new Progress();
+        progress.TotalBytes = n;
+        progress.bytes = 0;
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i &lt; n; i++)
+        {
+            /* If the task is cancelled, then stop the task */
+            if (promise.IsCancellationRequested)
+            {
+                promise.SetCancelled();
+                yield break;
+            }
+
+            progress.bytes += 1;
+            buf.Append(&quot; &quot;).Append(i);
+            promise.UpdateProgress(progress);/* update the progress of task. */
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        //执行完成必须设置结果
+        promise.SetResult(buf.ToString());
+    }
+
+}
+</code></pre>
+<h4>AsyncTask</h4>
+<p>异步任务是对一个线程任务或者一个协程任务的封装，将一个迭代器IEnumerator传入AsyncTask可以创建一个协程任务，或者将一个委托函数传入，可以创建一个后台线程执行的任务。根据任务执行过程，将一个任务拆分成执行前、执行成功后/执行失败后、执行结束几个阶段，在每一个阶段中都可以通过一个委托回调来注册自己的代码块。下面的示例中，我们来看看怎么创建一个协程任务。</p>
+<pre><code>public class AsyncTaskExample : MonoBehaviour
+{
+    protected IEnumerator Start()
+    {
+        AsyncTask task = new AsyncTask(DoTask(), true);
+
+        /* 开始任务 */
+        task.OnPreExecute(() =&gt;
+        {
+            //任务执行前调用
+            Debug.Log(&quot;The task has started.&quot;);
+        }).OnPostExecute(() =&gt;
+        {
+            //任务成功执行后调用
+            Debug.Log(&quot;The task has completed.&quot;);/* only execute successfully */
+        }).OnError((e) =&gt;
+        {
+            //任务执行失败调用
+            Debug.LogFormat(&quot;An error occurred:{0}&quot;, e);
+        }).OnFinish(() =&gt;
+        {
+            //任务执行完毕，无论成功失败，都会调用
+            Debug.Log(&quot;The task has been finished.&quot;);/* completed or error or canceled*/
+        }).Start();
+
+        //等待任务结束
+        yield return task.WaitForDone();
+
+        Debug.LogFormat(&quot;IsDone:{0} IsCanceled:{1} Exception:{2}&quot;, task.IsDone, task.IsCancelled, task.Exception);
+    }
+
+    /// &lt;summary&gt;
+    /// 模拟一个任务的执行
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The task.&lt;/returns&gt;
+    /// &lt;param name=&quot;promise&quot;&gt;Promise.&lt;/param&gt;
+    protected IEnumerator DoTask()
+    {
+        int n = 10;
+        for (int i = 0; i &lt; n; i++)
+        {
+            yield return new WaitForSeconds(0.5f);
+        }
+    }    
+}
+</code></pre>
+<h4>ProgressTask</h4>
+<p>ProgressTask与AsyncTask功能类似，只是增加了任务进度，同样ProgressTask既可以创建一个协程任务，也可以创建一个后台线程的任务。</p>
+<pre><code>public class ProgressTaskExample : MonoBehaviour
+{
+    protected IEnumerator Start()
+    {
+        //创建一个任务，这个任务将在一个后台线程中执行
+        ProgressTask&lt;float, string&gt; task = new ProgressTask&lt;float, string&gt;(
+                new Action&lt;IProgressPromise&lt;float, string&gt;&gt;(DoTask), false, true);
+
+        /* 开始一个任务 */
+        task.OnPreExecute(() =&gt;
+        {
+            //在任务执行前调用
+            Debug.Log(&quot;The task has started.&quot;);
+        }).OnPostExecute((result) =&gt;
+        {
+            //在任务成功执行后调用
+            Debug.LogFormat(&quot;The task has completed. result:{0}&quot;, result);/* only execute successfully */
+        }).OnProgressUpdate((progress) =&gt;
+        {
+            //任务执行的进度
+            Debug.LogFormat(&quot;The current progress:{0}%&quot;, (int)(progress * 100));
+        }).OnError((e) =&gt;
+        {
+            //在任务执行失败后调用
+            Debug.LogFormat(&quot;An error occurred:{0}&quot;, e);
+        }).OnFinish(() =&gt;
+        {
+            //任务执行完毕，无论成功失败，都会调用
+            Debug.Log(&quot;The task has been finished.&quot;);/* completed or error or canceled*/
+        }).Start();
+
+        yield return task.WaitForDone();
+
+        Debug.LogFormat(&quot;IsDone:{0} IsCanceled:{1} Exception:{2}&quot;, task.IsDone, task.IsCancelled, task.Exception);
+    }
+
+    /// &lt;summary&gt;
+    /// 模拟一个任务，这不是一个迭代器，这将会在一个后台线程中执行
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The task.&lt;/returns&gt;
+    /// &lt;param name=&quot;promise&quot;&gt;Promise.&lt;/param&gt;
+    protected void DoTask(IProgressPromise&lt;float, string&gt; promise)
+    {
+        try
+        {
+            int n = 50;
+            float progress = 0f;
+            StringBuilder buf = new StringBuilder();
+            for (int i = 0; i &lt; n; i++)
+            {
+                /* If the task is cancelled, then stop the task */
+                if (promise.IsCancellationRequested)
+                {
+                    promise.SetCancelled();
+                    break;
+                }
+
+                progress = i / (float)n;
+                buf.Append(&quot; &quot;).Append(i);
+                promise.UpdateProgress(progress);/* update the progress of task. */
+                Thread.Sleep(200);
+            }
+            promise.UpdateProgress(1f);
+            promise.SetResult(buf.ToString()); /* update the result. */
+        }
+        catch (System.Exception e)
+        {
+            promise.SetException(e);
+        }
+    }
+}
+</code></pre>
+<h4>CoroutineTask</h4>
+<p>在C# 4.0之前需要执行一个复杂的异步操作时，一般都使用线程池技术来执行一个任务。在C# 4.0中引人了Task（System.Threading.Tasks.Task）机制，它提供了更为方便和简洁的API，为保持Unity3D协程异步任务和线程异步任务Task用法一致，我实现了CoroutineTask类，它的API基本上和Task是一致的，唯一的区别就是它执行的是协程异步任务，它的所有任务都是在主线程中执行。</p>
+<pre><code>public class CoroutineTaskExample : MonoBehaviour
+{
+    IEnumerator Start()
+    {
+        CoroutineTask task = new CoroutineTask(DoTask())
+            .ContinueWith(
+                DoContinueTask(),
+                CoroutineTaskContinuationOptions.OnCompleted
+                | CoroutineTaskContinuationOptions.OnFaulted
+            ).ContinueWith(
+                () =&gt; { Debug.Log(&quot;The task is completed&quot;); }
+            );
+
+        yield return task.WaitForDone();
+
+        Debug.LogFormat(&quot;IsDone:{0} IsCompleted:{1} IsFaulted:{2} IsCancelled:{3}&quot;,
+            task.IsDone, task.IsCompleted, task.IsFaulted, task.IsCancelled);
+    }
+
+    /// &lt;summary&gt;
+    /// Simulate a task.
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;The task.&lt;/returns&gt;
+    /// &lt;param name=&quot;promise&quot;&gt;Promise.&lt;/param&gt;
+    protected IEnumerator DoTask()
+    {
+        int n = 10;
+        for (int i = 0; i &lt; n; i++)
+        {
+            Debug.LogFormat(&quot;Task:i = {0}&quot;, i);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }
+
+    protected IEnumerator DoContinueTask()
+    {
+        int n = 10;
+        for (int i = 0; i &lt; n; i++)
+        {
+            Debug.LogFormat(&quot;ContinueTask:i = {0}&quot;, i);
+            yield return new WaitForSeconds(0.5f);
+        }
+    }    
+
+}
+</code></pre>
+<p>更多的示例请查看教程 Basic Tutorials.unity</p>
+<h3>Async &amp; Await</h3>
+<h4>C# 的 async &amp; await</h4>
+<p>Unity2017发布后，使用 .Net 4.x 或者 .Net Standard 2.0库，已经可以使用C#的新特性async和await。框架为IEnumerator、YieldInstruction、CustomYieldInstruction、AsyncOperation、IAsyncResult、CoroutineTask等等扩展了GetAwaiter()函数，以支持async-await特性。同时增加WaitForMainThread和WaitForBackgroundThread类用来切换代码片段的工作线程。</p>
+<p>示例一，async和await使用方式</p>
+<pre><code>public class AsyncAndAwaitExample : MonoBehaviour
+{
+    async void Start()
+    {
+        await new WaitForSeconds(2f);
+        Debug.Log(&quot;WaitForSeconds  End&quot;);
+
+        await Task.Delay(1000);
+        Debug.Log(&quot;Delay  End&quot;);
+
+        UnityWebRequest www = UnityWebRequest.Get(&quot;http://www.baidu.com&quot;);
+        await www.SendWebRequest();
+        Debug.Log(www.downloadHandler.text);
+
+        int result = await Calculate();
+        Debug.LogFormat(&quot;Calculate Result = {0} Calculate Task End&quot;, result);
+
+        await new WaitForSecondsRealtime(1f);
+        Debug.Log(&quot;WaitForSecondsRealtime  End&quot;);
+
+        await DoTask(5);
+        Debug.Log(&quot;DoTask End&quot;);
+    }
+
+    IAsyncResult&lt;int&gt; Calculate()
+    {
+        return Executors.RunAsync&lt;int&gt;(() =&gt;
+        {
+            Debug.LogFormat(&quot;Calculate Task ThreadId:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+            int total = 0;
+            for (int i = 0; i &lt; 20; i++)
+            {
+                total += i;
+                try
+                {
+                    Thread.Sleep(100);
+                }
+                catch (Exception) { }
+            }
+            return total;
+        });
+    }
+
+    IEnumerator DoTask(int n)
+    {
+        yield return new WaitForSeconds(1f);
+
+        for (int i = 0; i &lt; n; i++)
+        {
+            yield return null;
+        }
+    }
+}
+</code></pre>
+<p>示例二，在函数中，主线程和后台线程的可以通过WaitForBackgroundThread和WaitForMainThread切换，不同的代码片段可以执行在不同的线程中。</p>
+<pre><code>using Loxodon.Framework.Asynchronous;//扩展函数GetAwaiter()所在命名空间
+using System.Threading;
+using System.Threading.Tasks;
+public class AsyncAndAwaitSwitchThreadsExample : MonoBehaviour
+{
+    async void Start()
+    {
+        //Unity Thread
+        Debug.LogFormat(&quot;1. ThreadID:{0}&quot;,Thread.CurrentThread.ManagedThreadId);
+
+        await new WaitForBackgroundThread();
+
+        //Background Thread
+        Debug.LogFormat(&quot;2.After the WaitForBackgroundThread.ThreadID:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+
+        await new WaitForMainThread();
+
+        //Unity Thread
+        Debug.LogFormat(&quot;3.After the WaitForMainThread.ThreadID:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+
+        await Task.Delay(3000).ConfigureAwait(false);
+
+        //Background Thread
+        Debug.LogFormat(&quot;4.After the Task.Delay.ThreadID:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+
+        await new WaitForSeconds(1f);
+
+        //Unity Thread
+        Debug.LogFormat(&quot;5.After the WaitForSeconds.ThreadID:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+    }
+}
+</code></pre>
+<p>更多的示例请查看教程 Async &amp; Await Tutorials.unity</p>
+<h4>Task转Unity协程</h4>
+<p>框架为Task扩展了AsCoroutine()函数，支持Task转为Unity的协程，请看示例。</p>
+<pre><code>using Loxodon.Framework.Asynchronous;//扩展函数AsCoroutine()所在命名空间
+public class TaskToCoroutineExample : MonoBehaviour
+{
+    IEnumerator Start()
+    {
+        Task task = Task.Run(() =&gt;
+        {
+            for (int i = 0; i &lt; 5; i++)
+            {
+                try
+                {
+                    Thread.Sleep(200);
+                }
+                catch (Exception) { }
+
+                Debug.LogFormat(&quot;Task ThreadId:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+            }
+        });
+
+        yield return task.AsCoroutine();
+        Debug.LogFormat(&quot;Task End,Current Thread ID:{0}&quot;, Thread.CurrentThread.ManagedThreadId);
+
+        yield return Task.Delay(1000).AsCoroutine();
+        Debug.LogFormat(&quot;Delay End&quot;);
+    }
+}
+</code></pre>
+<h4>Lua的async &amp; await</h4>
+<p>为了保持Lua开发与C#开发同步,在Lua中我也同样增加了async &amp; await的支持，并且确保C#和Lua可以相互调用。</p>
+<p>Lua中async是一个函数，async只能有一个输入参数，而且必须是一个函数，async将输入的函数包装为一个lua协程，返回值是一个被包装后的函数。async的输入函数可以是有参数的，也可以是无参数的函数，函数可以有一个或者多个返回值，也可以无返回值。</p>
+<p>await同样也是一个函数，await函数的输入参数必须是一个AsyncTask对象，或者是任何一个实现了GetAwaiter()函数的异步结果，不管是C#的对象还是lua对象都支持，所以无论是C#的Task、UniTask还是Unity的异步结果，都可以作为await的输入参数。await函数会监听异步结果的回调，同时挂起当前协程，当异步任务完成，回调后会触发协程继续执行。await同样支持无返回值，单个返回值或者多个返回值的异步结果。</p>
+<p>async &amp; await函数定义在AsyncTask模块中，只要在lua文件中通过require导入AsyncTask模块，即可使用</p>
+<p>下面请看示例，将下面的lua类挂在LuaBehaviour上，通过LuaBehaviour自动调用start函数。</p>
+<pre><code>require(&quot;framework.System&quot;)     
+local AsyncTask = require(&quot;framework.AsyncTask&quot;) --导入AsyncTask模块，同时导入了 async、await、try 函数
+
+local M=class(&quot;Example&quot;,target)    
+
+--定义position函数，输入参数是xyz，返回AsyncTask异步对象
+--async支持多个返回值的函数
+M.position = async(function(x,y,z)
+	return x/1000.0,y/1000.0,z/1000.0
+end)
+
+M.start = async(function(self)		
+	await(AsyncTask.Delay(1000)) --Delay 1000 milliseconds
+
+	local x,y,z = await(M.position(1200,500,240)) --异步调用position函数，返回x,y,z
+
+	printf(&quot;x=%s y=%s z=%s&quot;,x,y,z)		
+
+	--异步调用Resources.LoadAsync
+	local goTemplate = await(CS.UnityEngine.Resources.LoadAsync(&quot;Prefabs/Cube&quot;,typeof(CS.UnityEngine.GameObject)))
+
+	local go = GameObject.Instantiate(goTemplate)
+
+	go.transform.localPosition = CS.UnityEngine.Vector3.zero;
+end)
+</code></pre>
+<h4>C# 调用Lua的async函数</h4>
+<p>在C#运行时，我实现了ILuaTask接口，在C#方可以很方便的将AsyncTask对象自动转换为ILuaTask对象，方便C#调用。</p>
+<p>如上示例中的M.start函数，执行start()将会返回一个AsyncTask的lua对象，请看下面的C#调用代码。</p>
+<pre><code>public class LuaBehaviour : MonoBehaviour, ILuaExtendable
+{
+    protected LuaTable metatable;
+    protected Func&lt;MonoBehaviour, ILuaTask&gt; onStart;
+
+    protected virtual void Awake()
+    {
+        ...
+
+        metatable = (LuaTable)result[0];
+        //调用lua的start函数，此函数可以是async包装的异步函数，也可以是普通函数
+        onStart = metatable.Get&lt;Func&lt;MonoBehaviour, ILuaTask&gt;&gt;(&quot;start&quot;);
+    }
+
+    protected virtual async void Start()
+    {
+        if (onStart != null)
+        {
+            //start是async包装的异步函数则会返回ILuaTask对象，否则返回null
+            ILuaTask task = onStart(this);
+            if (task != null)
+                await task;
+        }
+    }
+}
+</code></pre>
+<h4>Lua的try / catch / finally</h4>
+<p>为配合async和await的使用，使用try函数包装了lua的xpcall函数，以方便在lua函数中捕获异常。</p>
+<p>try函数的输入参数一个lua表，起结构如下，t[0]是主函数，t.catch是catch函数，t.finally是finally函数</p>
+<pre><code>{
+	function()
+		--这是主函数
+	end,
+	catch=function(e)
+		--这是catch函数
+	end,
+	finally =function()
+		--这是finally函数
+	end			
+}
+</code></pre>
+<p>try/catch的示例</p>
+<pre><code>local position = async(function(x,y,z)
+
+    --try 实际是一个函数，如果需要返回值则在try之前加return，否则不需要加return
+
+	return try{
+		function()
+			--这是主函数
+			error(&quot;This a test,throw an exception&quot;)				
+			return x/1000.0,y/1000.0,z/1000.0
+		end,
+		catch=function(e)
+			--这是catch函数
+			printf(&quot;Catch exception:%s&quot;,e)
+			return 0,0,0 --发生异常，返回默认值
+		end,
+		finally =function()
+			--这是finally函数
+			print(&quot;Execute the finally block&quot;)
+		end			
+	}		
+end)
+</code></pre>
+<h3>线程/协程执行器</h3>
+<p>在Unity3d逻辑脚本的开发中，是不支持多线程的，所有的UnityEngine.Object对象，都只能在主线程中访问和修改，但是在游戏开发过程中，我们很难避免会使用到多线程编程，比如通过Socket连接从网络上接受数据，通过多线程下载资源，一些纯计CPU计算的逻辑切入到后台线程去运算等等。这里就会面临一个线程切换的问题。所以在Loxodon.Framework框架中，我设计了一个线程和协程的执行器配合前文中的任务结果来使用，它能够很方便的将任务切换到主线程执行，也能很方便的开启一个后台线程任务。</p>
+<h4>执行器(Executors)</h4>
+<pre><code>public class ExecutorExample : MonoBehaviour
+{
+
+    IEnumerator Start()
+    {
+        //在后台线程中异步运行一个任务
+        Executors.RunAsync(() =&gt;
+        {
+            Debug.LogFormat(&quot;RunAsync &quot;);
+        });
+
+        //在后台线程中异步运行一个任务
+        Executors.RunAsync(() =&gt;
+        {
+            //睡眠1000毫秒
+            Thread.Sleep(1000);
+
+            //从后台线程切换到主线程中，
+            //waitForExecution = true，当前函数直到主线程执行完后才返回
+            Executors.RunOnMainThread(() =&gt;
+            {
+                Debug.LogFormat(&quot;RunOnMainThread Time:{0} frame:{1}&quot;, Time.time, Time.frameCount);
+            }, true);
+        });
+
+        //运行一个协程任务
+        IAsyncResult result = Executors.RunOnCoroutine(DoRun());
+
+        //等待任务完成
+        yield return result.WaitForDone();
+    }
+
+    IEnumerator DoRun()
+    {
+        for (int i = 0; i &lt; 10; i++)
+        {
+            Debug.LogFormat(&quot;i = {0}&quot;, i);
+            yield return null;
+        }
+    }
+}
+</code></pre>
+<h4>定时任务执行器(IScheduledExecutor)</h4>
+<p>在本框架中提供了一个线程的定时任务执行器(ThreadScheduledExecutor)和一个Unity3D协程的定时任务执行器(CoroutineScheduledExecutor),下面我们以线程的定时任务执行器为例，来介绍它的用法。</p>
+<pre><code>//创建并启动一个线程的定时任务执行器
+var scheduled = new ThreadScheduledExecutor();
+scheduled.Start();
+
+//延时1000毫秒后执行，以固定频率，每隔2000毫秒，打印一句“This is a test.”
+IAsyncResult result = scheduled.ScheduleAtFixedRate(() =&gt;
+{
+    Debug.Log(&quot;This is a test.&quot;);
+}, 1000, 2000);
+</code></pre>
+<h4>可拦截的迭代器(InterceptableEnumerator)</h4>
+<p>在Unity3D的协程中，如果发生异常，是无法捕获到异常的，try catch不允许跨yield使用，finally也不能确保代码块在协程异常结束时还能被执行，所以很多时候无法知道一个协程是否正常执行结束，出现错误也不方便查找原因，根据Unity3D协程其本质是一个迭代器的原理，我设计了一个可以在协程执行过程中注入代码块，捕获异常的可拦截迭代器。使用InterceptableEnumerator对原迭代器进行包装，就可以捕获到协程代码执行异常，并且无论协程是否正常结束，都可在协程退出前插入一个代码块，确保这个代码块一定会在协程结束时执行。在我的Executors中，我就是利用InterceptableEnumerator来确保任务正常结束的，无论协程执行成功或者异常我都能通过注册的Finally语句块来设置AsyncResult的结果，确保AsyncResult.IsDone等于true，不会造成任务卡死。</p>
+<p>InterceptableEnumerator支持条件语句块，可以在外部插入一个条件语句块，控制协程逻辑或中止协程。异常语句块，可以捕获到协程异常，Finally语句块，确保协程结束一定会调用这个语句块。下面我们来看看示例。</p>
+<pre><code>/// &lt;summary&gt;
+/// 这是一个迭代器的包装函数
+/// &lt;/summary&gt;
+protected static InterceptableEnumerator WrapEnumerator(IEnumerator routine, IPromise promise)
+{
+    InterceptableEnumerator enumerator;
+    if(routine is InterceptableEnumerator)
+        enumerator = (InterceptableEnumerator)routine;
+    else
+        enumerator = new InterceptableEnumerator(routine);
+
+    //注册一个条件语句块，如果任务取消，IsCancellationRequested = true，则结束任务
+    enumerator.RegisterConditionBlock(() =&gt; !(promise.IsCancellationRequested));
+
+    //注册一个异常捕获语句块，如果协程执行错误，则将异常赋值到任务结果，并打印错误
+    enumerator.RegisterCatchBlock(e =&gt;
+    {
+        if (promise != null)
+            promise.SetException(e);
+
+        if (log.IsErrorEnabled)
+            log.Error(e);
+    });
+
+    //注册一个Finally语句块，确保任务能够正常结束退出
+    enumerator.RegisterFinallyBlock(() =&gt;
+    {
+        if (promise != null &amp;&amp; !promise.IsDone)
+        {
+            if (promise.GetType().IsSubclassOfGenericTypeDefinition(typeof(IPromise&lt;&gt;)))
+                promise.SetException(new Exception(&quot;No value given the Result&quot;));
+            else
+                promise.SetResult();
+        }
+    });
+    return enumerator;
+}
+</code></pre>
+<p>更多的示例请查看教程 Basic Tutorials.unity</p>
+<h3>消息系统(Messenger)</h3>
+<p>Messenger用于应用模块间的通讯，它提供了消息订阅和发布的功能。Messenger支持按消息类型订阅和发布消息，也支持按channel来订阅和发布消息。</p>
+<pre><code>public class MessengerExample : MonoBehaviour
+{
+    private IDisposable subscription;
+    private IDisposable chatroomSubscription;
+    private void Start()
+    {
+        //获得默认的Messenger
+        Messenger messenger = Messenger.Default;
+
+        //订阅一个消息,确保subscription是成员变量，否则subscription被GC回收时会自动退订消息
+        subscription = messenger.Subscribe((PropertyChangedMessage&lt;string&gt; message) =&gt;
+        {
+            Debug.LogFormat(&quot;Received Message:{0}&quot;, message);
+        });
+
+        //发布一个属性名改变的消息
+        messenger.Publish(new PropertyChangedMessage&lt;string&gt;(&quot;clark&quot;, &quot;tom&quot;, &quot;Name&quot;));
+
+        //订阅聊天频道&quot;chatroom1&quot;的消息
+        chatroomSubscription = messenger.Subscribe(&quot;chatroom1&quot;, (string message) =&gt;
+         {
+             Debug.LogFormat(&quot;Received Message:{0}&quot;, message);
+         });
+
+        //向聊天频道&quot;chatroom1&quot;发布一条消息
+        messenger.Publish(&quot;chatroom1&quot;, &quot;hello!&quot;);
+    }
+
+    private void OnDestroy()
+    {
+        if (this.subscription != null)
+        {
+            //退订消息
+            this.subscription.Dispose();
+            this.subscription = null;
+        }
+
+        if (this.chatroomSubscription != null)
+        {
+            //退订消息
+            this.chatroomSubscription.Dispose();
+            this.chatroomSubscription = null;
+        }
+    }
+}
+</code></pre>
+<p>更多的示例请查看教程 Basic Tutorials.unity</p>
+<h3>可观察的对象(Observables)</h3>
+<p>ObservableObject、ObservableList、ObservableDictionary，在MVVM框架的数据绑定中是必不可少的，它们分别实现了INotifyPropertyChanged和INotifyCollectionChanged接口，当对象的属性改变或者集合中Item变化时，我们能通过监听PropertyChanged和CollectionChanged事件可以收到属性改变和集合改变的通知，在数据绑定功能中，只有实现了这两个接口的对象在属性或者集合变化时，会自动通知UI视图改变，否则只能在初始绑定时给UI控件赋值一次，绑定之后改变视图模型的数值，无法通知UI控件修改。</p>
+<p>下面我们看看ObservableDictionary的使用示例，当我们需要创建一个自定义的ListView控件时，我们需要了解其原理。</p>
+<pre><code>public class ObservableDictionaryExample : MonoBehaviour
+{
+    private ObservableDictionary&lt;int, Item&gt; dict;
+
+    protected void Start()
+    {
+#if UNITY_IOS
+        //在IOS中，泛型类型的字典，需要提供IEqualityComparer&lt;TKey&gt;，否则可能JIT异常
+        this.dict = new ObservableDictionary&lt;int, Item&gt;(new IntEqualityComparer());
+#else
+        this.dict = new ObservableDictionary&lt;int, Item&gt;();
+#endif
+        dict.CollectionChanged += OnCollectionChanged;
+
+        //添加Item
+        dict.Add(1, new Item() { Title = &quot;title1&quot;, IconPath = &quot;xxx/xxx/icon1.png&quot;, Content = &quot;this is a test.&quot; });
+        dict.Add(2, new Item() { Title = &quot;title2&quot;, IconPath = &quot;xxx/xxx/icon2.png&quot;, Content = &quot;this is a test.&quot; });
+
+        //删除Item
+        dict.Remove(1);
+
+        //清除字典
+        dict.Clear();
+    }
+
+    protected void OnDestroy()
+    {
+        if (this.dict != null)
+        {
+            this.dict.CollectionChanged -= OnCollectionChanged;
+            this.dict = null;
+        }
+    }
+
+    //集合改变事件
+    protected void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+    {
+        switch (eventArgs.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                foreach (KeyValuePair&lt;int, Item&gt; kv in eventArgs.NewItems)
+                {
+                    Debug.LogFormat(&quot;ADD key:{0} item:{1}&quot;, kv.Key, kv.Value);
+                }
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                foreach (KeyValuePair&lt;int, Item&gt; kv in eventArgs.OldItems)
+                {
+                    Debug.LogFormat(&quot;REMOVE key:{0} item:{1}&quot;, kv.Key, kv.Value);
+                }
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                foreach (KeyValuePair&lt;int, Item&gt; kv in eventArgs.OldItems)
+                {
+                    Debug.LogFormat(&quot;REPLACE before key:{0} item:{1}&quot;, kv.Key, kv.Value);
+                }
+                foreach (KeyValuePair&lt;int, Item&gt; kv in eventArgs.NewItems)
+                {
+                    Debug.LogFormat(&quot;REPLACE after key:{0} item:{1}&quot;, kv.Key, kv.Value);
+                }
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                Debug.LogFormat(&quot;RESET&quot;);
+                break;
+            case NotifyCollectionChangedAction.Move:
+                break;
+        }
+    }
+}
+</code></pre>
+<p>更多的示例请查看教程 Basic Tutorials.unity</p>
+<h3>数据绑定(Databinding)</h3>
+<p>数据绑定是MVVM的关键技术，它用于将视图与视图模型进行绑定连接，视图和视图模型的连接可以是双向的，也可以是单向的，视图模型数据的改变可以通过数据绑定功能自动通知视图改变，同样视图的改变也可以通知视图模型数值进行改变。除了数值的连接外，数据绑定还可以支持事件、方法、命令的绑定。数据绑定在框架中是以一个服务模块的方式存在，它由很多的功能组件组成，如数据绑定上下文、类型转换器、表达式解析器、路径解析器、对象和方法代理、属性和Field的访问器等。数据绑定服务是可选的，只有在使用到框架的视图模块，且使用MVVM的方式来开发UI时，它是必要的。当然你也可以不使用本框架的视图模块，而仅仅使用数据绑定服务。</p>
+<p>数据绑定服务是一个基础组件，我们可以在游戏初始化脚本中启动数据绑定服务，并且将所有的组件注册到全局上下文的服务容器中。如果有朋友想使用第三方的IoC组件，如Autofac、Zenject等，那么需要参考BindingServiceBundle的代码，将OnStart函数中初始化的所有类用其他的容器来创建。</p>
+<pre><code>//获得全局上下文
+ApplicationContext context = Context.GetApplicationContext();
+
+//初始化数据绑定服务
+BindingServiceBundle bindingService = new BindingServiceBundle(context.GetContainer());
+bindingService.Start();
+</code></pre>
+<p>如果安装了Lua插件，使用Lua编写游戏时，数据绑定服务初始化如下，LuaBindingServiceBundle中增加了有关对Lua对象支持的组件。</p>
+<pre><code>//获得全局上下文
+ApplicationContext context = Context.GetApplicationContext();
+
+//初始化数据绑定服务
+LuaBindingServiceBundle bundle = new LuaBindingServiceBundle(context.GetContainer());
+bundle.Start();
+</code></pre>
+<h4>数据绑定示例</h4>
+<pre><code>//创建一个数据绑定集合，泛型参数DatabindingExample是视图，AccountViewModel是视图模型
+BindingSet&lt;DatabindingExample, AccountViewModel&gt; bindingSet;
+bindingSet = this.CreateBindingSet&lt;DatabindingExample, AccountViewModel&gt;();
+
+//绑定Text.text属性到Account.Username上，OneWay是单向,将Account.Username的值赋值到UI控件
+bindingSet.Bind(this.username).For(v =&gt; v.text).To(vm =&gt; vm.Account.Username).OneWay();
+
+//绑定InputField.text到Username属性，双向绑定，修改Username，自动更新InputField控件，修改InputField自动更新Username属性
+bindingSet.Bind(this.usernameEdit).For(v =&gt; v.text, v =&gt; v.onEndEdit).To(vm =&gt; vm.Username).TwoWay();
+
+//绑定Button到视图模型的OnSubmit方法，方向属性无效
+bindingSet.Bind(this.submit).For(v =&gt; v.onClick).To(vm =&gt; vm.OnSubmit);
+
+bindingSet.Build();
+</code></pre>
+<h4>绑定模式</h4>
+<ul>
+<li>
+<p><strong>OneWay</strong>(View &lt;-- ViewModel)</p>
+<p>单向绑定，只能视图模型修改视图中UI控件的值，ViewModel必须继承了INotifyPropertyChanged接口，并且属性值变化时会触发PropertyChanged事件，否则效果与OneTime一致，只有初始化绑定赋值一次。如Field则只能首次有效。</p>
+</li>
+<li>
+<p><strong>TwoWay</strong>(View &lt;--&gt; ViewModel)</p>
+<p>双向绑定，视图控件修改，会自动修改视图模型，视图模型修改会自动修改视图控件。ViewModel必须支持PropertyChanged事件，UI控件必须支持onEndEdit事件，并且绑定了onEndEdit事件。</p>
+</li>
+<li>
+<p><strong>OneTime</strong>(View &lt;-- ViewModel)</p>
+<p>只赋值一次，只有在绑定关系初始化的时候将ViewModel的值赋值到视图控件上。</p>
+</li>
+<li>
+<p><strong>OneWayToSource</strong>(View --&gt; ViewModel)</p>
+<p>单向绑定，方向与OneWay相反，只能视图UI控件赋值到视图模型的属性。</p>
+</li>
+</ul>
+<h4>类型转换器(IConverter)</h4>
+<p>通常情况下，基本数据类型，当视图控件的字段类型与视图模型字段类型不一致时会自动转换，除非是无法自动转换的情况下才需要自定义类型转换器来支持。但是通过视图模型中保存的图片路径、图片名称或者图集精灵的名称，来修改视图控件上的图片或者图集精灵时，则必须通过类型转换器来转换。</p>
+<pre><code>//加载一个精灵图集
+Dictionary&lt;string, Sprite&gt; sprites = new Dictionary&lt;string, Sprite&gt;();
+foreach (var sprite in Resources.LoadAll&lt;Sprite&gt;(&quot;EquipTextures&quot;))
+{
+    if (sprite != null)
+        sprites.Add(sprite.name, sprite);
+}
+
+//创建一个支持精灵名称到Sprite的转换器
+var spriteConverter = new SpriteConverter(sprites)；
+
+//获得转换器注册服务，它在数据绑定服务启动时会自动创建并注入上下文容器中
+IConverterRegistry converterRegistry = context.GetContainer().Resolve&lt;IConverterRegistry&gt;();
+
+//注册精灵转换器
+converterRegistry.Register(&quot;spriteConverter&quot;,spriteConverter);
+
+//通过视图模型Icon，修改精灵名称，通过spriteConverter转换为对应的Sprite，赋值到图片的sprite属性上。
+bindingSet.Bind(this.image).For(v =&gt; v.sprite).To(vm =&gt; vm.Icon).WithConversion(&quot;spriteConverter&quot;).OneWay();
+</code></pre>
+<p>请查看示例 ListView And Sprite Databinding Tutorials.unity</p>
+<h4>绑定类型</h4>
+<ul>
+<li>
+<p><strong>属性和Field绑定</strong></p>
+<p>属性和Field绑定很简单，直接见示例</p>
+<pre><code>//C#，单向绑定
+bindingSet.Bind(this.username).For(v =&gt; v.text).To(vm =&gt; vm.Account.Username).OneWay();
+
+//C#，双向绑定，双向绑定时视图对象必须支持视图改变的事件，如“onEndEdit”，必须在For函数中配置
+bindingSet.Bind(this.usernameEdit).For(v =&gt; v.text, v =&gt; v.onEndEdit).To(vm =&gt; vm.Username).TwoWay();
+
+//C#，非拉姆达表达式的方式
+bindingSet.Bind (this.username).For (&quot;text&quot;).To (&quot;Account.Username&quot;).OneWay ();
+
+--Lua，非拉姆达表达式参数的版本
+bindingSet:Bind(self.username):For(&quot;text&quot;):To(&quot;account.username&quot;):OneWay()
+bindingSet:Bind(self.errorMessage):For(&quot;text&quot;):To(&quot;errors['errorMessage']&quot;):OneWay()
+</code></pre>
+</li>
+<li>
+<p><strong>表达式绑定</strong></p>
+<p>表达式绑定只支持视图模型的一个或者多个属性，通过表达式转换为某个类型的值赋值到视图UI控件上，只能是OneTime或者OneWay的类型。表达式绑定函数，支持拉姆达表达式参数和string参数两种配置方式，C#代码只支持拉姆达表达式参数的方法，代码会自动分析表达式关注的视图模型的一个或者多个属性，自动监听这些属性的改变；Lua代码只支持使用string参数版本的方法，无法自动分析使用了视图模型的哪些属性，需要在参数中配置表达式所使用到的属性。</p>
+<pre><code>//C#代码，使用拉姆达表达式为参数的ToExpression方法，自动分析监听视图模型的Price属性
+bindingSet.Bind(this.price).For(v =&gt; v.text).ToExpression(vm =&gt; string.Format(&quot;${0:0.00}&quot;, vm.Price)).OneWay();
+
+--Lua代码，使用string参数版本的ToExpression方法，需要手动配置price属性,如果表达式使用了vm的多个属性，
+--则在&quot;price&quot;后继续配置其他属性
+bindingSet:Bind(self.price):For(&quot;text&quot;):ToExpression(function(vm)
+    return string.format(tostring(&quot;%0.2f&quot;), vm.price)
+end ,&quot;price&quot;):OneWay()
+</code></pre>
+</li>
+<li>
+<p><strong>方法绑定</strong></p>
+<p>方法绑定与属性绑定类似，也支持拉姆达表达式和字符串参数两个版本，方法绑定要确保控件的事件参数类型与视图模型被绑定方法的参数类型一致，否则可能导致绑定失败。</p>
+<pre><code>//C#，拉姆达表达式方式的绑定，Button.onClick 与视图模型的成员OnSubmit方法绑定
+bindingSet.Bind(this.submit).For(v =&gt; v.onClick).To(vm =&gt; vm.OnSubmit);
+
+//C#，拉姆达表达式方式的绑定，如果方法带参数，请在To后面加上泛型约束
+bindingSet.Bind(this.emailEdit).For(v =&gt; v.onValueChanged).To&lt;string&gt;(vm =&gt; vm.OnEmailValueChanged);
+
+--Lua，通过字符串参数绑定，Button.onClick 与视图模型的成员submit方法绑定
+bindingSet:Bind(self.submit):For(&quot;onClick&quot;):To(&quot;submit&quot;):OneWay()
+</code></pre>
+</li>
+<li>
+<p><strong>命令和交互请求绑定</strong></p>
+<p>命令是对视图模型方法的一个包装，一般UI按钮onClick的绑定，既可以绑定到视图模型的一个方法，也可以绑定到视图模型的一个命令。但是建议绑定到命令上，命令不但可以响应按钮的点击事件，还能控制按钮的可点击状态，可以在按钮按下后立即使按钮置灰，在按钮事件响应完成后，重新恢复按钮状态。</p>
+<p>交互请求(InteractionRequest)交互请求往往都和命令配对使用，命令响应UI的点击事件，处理点击逻辑，交互请求向控制层发生消息控制UI的创建、修改和销毁。</p>
+<pre><code>//C#，绑定控制层的OnOpenAlert函数到交互请求AlertDialogRequest上
+bindingSet.Bind().For(v =&gt; this.OnOpenAlert).To(vm =&gt; vm.AlertDialogRequest);
+
+//绑定Button的onClick事件到OpenAlertDialog命令上
+bindingSet.Bind(this.openAlert).For(v =&gt; v.onClick).To(vm =&gt; vm.OpenAlertDialog);
+</code></pre>
+</li>
+<li>
+<p><strong>集合的绑定</strong></p>
+<p>字典和列表的绑定跟属性/Field绑定基本差不多，见下面的代码</p>
+<pre><code>//C#，绑定一个Text.text属性到一个字典ObservableDictionary中key =&quot;errorMessage&quot; 对应的对象
+bindingSet.Bind(this.errorMessage).For(v =&gt; v.text).To(vm =&gt; vm.Errors[&quot;errorMessage&quot;]).OneWay();
+</code></pre>
+</li>
+<li>
+<p><strong>静态类绑定</strong></p>
+<p>静态类绑定和视图模型绑定唯一区别就是，静态类绑定创建的是静态绑定集，静态绑定集不需要视图模型对象。</p>
+<pre><code>//C#，创建一个静态类的绑定集
+BindingSet&lt;DatabindingExample&gt; staticBindingSet = this.CreateBindingSet&lt;DatabindingExample&gt;();
+
+//绑定标题到类Res的一个静态变量databinding_tutorials_title
+staticBindingSet.Bind(this.title).For(v =&gt; v.text).To(() =&gt; Res.databinding_tutorials_title).OneWay();
+</code></pre>
+</li>
+<li>
+<p><strong>本地化数据的绑定</strong></p>
+<p>本地化数据绑定请使用静态绑定集ToValue()函数绑定，首先通过Localization.GetValue()获得IObservableProperty对象，这是一个可观察的属性，切换语言时会收到值改变的通知，然后通过ToValue函数绑定，具体见下面的示例。</p>
+<pre><code>//C#，创建一个静态类型的绑定集
+BindingSet&lt;DatabindingExample&gt; staticBindingSet = this.CreateBindingSet&lt;DatabindingExample&gt;();
+
+var localization = Localization.Current;
+
+//通过本地化key获得一个IObservableProperty属性，
+//必须是IObservableProperty类型，否则切换语言不会更新
+var value = localization.GetValue(&quot;databinding.tutorials.title&quot;); //OK        
+//var value = localization.Get&lt;string&gt;(&quot;databinding.tutorials.title&quot;); //NO
+staticBindingSet.Bind(this.title).For(v =&gt; v.text).ToValue(value).OneWay();
+</code></pre>
+</li>
+</ul>
+<h4>Command Parameter</h4>
+<p>从事件到命令(ICommand)或方法的绑定支持自定义参数，使用Command Parameter可以为没有参数的UI事件添加一个自定义参数（如Button的Click事件），如果UI事件本身有参数则会被命令参数覆盖。使用Command Parameter可以很方便的将多个Button的Click事件绑定到视图模型的同一个函数OnClick(string buttonName)上，请注意确保函数的参数类型和命令参数匹配，否则会导致错误。命令参数在版本v2.5.2之前只支持常量作为命令参数，从v2.5.2开始，支持使用拉姆达表达式做为命令参数。详情请参考下面的示例</p>
+<p>在示例中将一组Button按钮的Click事件绑定到视图模型的OnClick函数上，通过参数buttonName可以知道当前按下了哪个按钮。</p>
+<pre><code>public class ButtonGroupViewModel : ViewModelBase
+{
+    private string text;
+    private readonly SimpleCommand&lt;string&gt; click;
+    public ButtonGroupViewModel()
+    {
+        this.click = new SimpleCommand&lt;string&gt;(OnClick);
+    }
+
+    public string Text
+    {
+        get { return this.text; }
+        set { this.Set&lt;string&gt;(ref text, value, &quot;Text&quot;); }
+    }
+
+    public ICommand Click
+    {
+        get { return this.click; }
+    }
+
+    public void OnClick(string buttonName)
+    {
+        Executors.RunOnCoroutineNoReturn(DoClick(buttonName));
+    }
+
+    private IEnumerator DoClick(string buttonName)
+    {
+        this.click.Enabled = false;
+        this.Text = string.Format(&quot;Click Button:{0}.Restore button status after one second&quot;, buttonName);
+        Debug.LogFormat(&quot;Click Button:{0}&quot;, buttonName);
+
+        //Restore button status after one second
+        yield return new WaitForSeconds(1f);
+        this.click.Enabled = true;
+    }
+
+}
+
+
+protected override void Start()
+{
+    ButtonGroupViewModel viewModel = new ButtonGroupViewModel();
+
+    IBindingContext bindingContext = this.BindingContext();
+    bindingContext.DataContext = viewModel;
+
+    /* databinding */
+    BindingSet&lt;DatabindingForButtonGroupExample, ButtonGroupViewModel&gt; bindingSet;
+    bindingSet = this.CreateBindingSet&lt;DatabindingForButtonGroupExample, ButtonGroupViewModel&gt;();
+    bindingSet.Bind(this.button1).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).CommandParameter(()=&gt;button1.name);
+    bindingSet.Bind(this.button2).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).CommandParameter(()=&gt;button2.name);
+    bindingSet.Bind(this.button3).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).CommandParameter(()=&gt;button3.name);
+    bindingSet.Bind(this.button4).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).CommandParameter(()=&gt;button4.name);
+    bindingSet.Bind(this.button5).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).CommandParameter(()=&gt;button5.name);
+
+    bindingSet.Bind(this.text).For(v =&gt; v.text).To(vm =&gt; vm.Text).OneWay();
+
+    bindingSet.Build();
+}
+</code></pre>
+<h4>Scope Key</h4>
+<p>在某些视图中，可能需要动态创建绑定关系，动态的移除绑定关系，这里我们提供了一种可以批量的移除绑定关系的方式，那就是Scope Key。</p>
+<pre><code>//C#,
+string scopeKey = &quot;editKey&quot;;
+bindingSet.Bind(this.username).For(v =&gt; v.text).To(vm =&gt; vm.Account.Username).WithScopeKey(scopeKey).OneWay();
+bindingSet.Bind(this.submit).For(v =&gt; v.onClick).To(vm =&gt; vm.OnSubmit()).WithScopeKey(scopeKey);
+
+//通过Scope Key移除绑定
+this.ClearBindings(scopeKey); //or this.BindingContext().Clear(scopeKey)
+</code></pre>
+<h4>绑定的生命周期</h4>
+<p>一般来说数据绑定都在视图创建函数中来初始化，通过BindingSet来配置视图控件和视图模型之间的绑定关系，当调用BindingSet的Build函数时，Binder会创建BindingSet中所有的绑定关系对，被创建的绑定对会保存在当前视图的BindingContext中。BindingContext在首次调用时自动创建，同时自动生成了一个BindingContextLifecycle脚本，挂在当前视图对象上，由它来控制BindingContext的生命周期，当视图销毁时，BindingContext会随之销毁，存放在BindingContext中的绑定关系对也会随之销毁。</p>
+<h4>注册属性和域的访问器</h4>
+<p>包括IOS平台在内，无论是Mono还是IL2CPP，数据绑定功能访问对象的属性、域都通过动态生成委托来访问，方法调用因为IL2CPP不支持表达式树的编译，使用的是反射调用，Mono使用的是通过表达式树编译成委托的方式调用。对于常用的UI控件，也可以通过静态注入访问器的方式访问对象的属性和域。默认情况下，我已经创建了UGUI和Unity引擎的部分类的属性访问器，参考我的代码，你也可以将视图模型类的常用属性的访问器注册到类型代理中。</p>
+<pre><code>public class UnityProxyRegister
+{
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    static void Initialize()
+    {
+        Register&lt;Transform, Vector3&gt;(&quot;localPosition&quot;, t =&gt; t.localPosition, (t, v) =&gt; t.localPosition = v);
+        Register&lt;Transform, Vector3&gt;(&quot;eulerAngles&quot;, t =&gt; t.eulerAngles, (t, v) =&gt; t.eulerAngles = v);
+        Register&lt;Transform, Vector3&gt;(&quot;localEulerAngles&quot;, t =&gt; t.localEulerAngles, (t, v) =&gt; t.localEulerAngles = v);
+        Register&lt;Transform, Vector3&gt;(&quot;right&quot;, t =&gt; t.right, (t, v) =&gt; t.right = v);
+        Register&lt;Transform, Vector3&gt;(&quot;up&quot;, t =&gt; t.up, (t, v) =&gt; t.up = v);
+        Register&lt;Transform, Vector3&gt;(&quot;forward&quot;, t =&gt; t.forward, (t, v) =&gt; t.forward = v);
+        Register&lt;Transform, Vector3&gt;(&quot;position&quot;, t =&gt; t.position, (t, v) =&gt; t.position = v);
+        Register&lt;Transform, Vector3&gt;(&quot;localScale&quot;, t =&gt; t.localScale, (t, v) =&gt; t.localScale = v);
+        Register&lt;Transform, Vector3&gt;(&quot;lossyScale&quot;, t =&gt; t.lossyScale, null);
+        Register&lt;Transform, Quaternion&gt;(&quot;rotation&quot;, t =&gt; t.rotation, (t, v) =&gt; t.rotation = v);
+        Register&lt;Transform, Quaternion&gt;(&quot;localRotation&quot;, t =&gt; t.localRotation, (t, v) =&gt; t.localRotation = v);
+        Register&lt;Transform, Matrix4x4&gt;(&quot;worldToLocalMatrix&quot;, t =&gt; t.worldToLocalMatrix, null);
+        Register&lt;Transform, Matrix4x4&gt;(&quot;localToWorldMatrix&quot;, t =&gt; t.localToWorldMatrix, null);
+        Register&lt;Transform, int&gt;(&quot;childCount&quot;, t =&gt; t.childCount, null);
+
+        Register&lt;RectTransform, Vector2&gt;(&quot;offsetMax&quot;, t =&gt; t.offsetMax, (t, v) =&gt; t.offsetMax = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;offsetMin&quot;, t =&gt; t.offsetMin, (t, v) =&gt; t.offsetMin = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;pivot&quot;, t =&gt; t.pivot, (t, v) =&gt; t.pivot = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;sizeDelta&quot;, t =&gt; t.sizeDelta, (t, v) =&gt; t.sizeDelta = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;anchoredPosition&quot;, t =&gt; t.anchoredPosition, (t, v) =&gt; t.anchoredPosition = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;anchorMax&quot;, t =&gt; t.anchorMax, (t, v) =&gt; t.anchorMax = v);
+        Register&lt;RectTransform, Vector3&gt;(&quot;anchoredPosition3D&quot;, t =&gt; t.anchoredPosition3D, (t, v) =&gt; t.anchoredPosition3D = v);
+        Register&lt;RectTransform, Vector2&gt;(&quot;anchorMin&quot;, t =&gt; t.anchorMin, (t, v) =&gt; t.anchorMin = v);
+        Register&lt;RectTransform, Rect&gt;(&quot;rect&quot;, t =&gt; t.rect, null);
+
+        Register&lt;GameObject, bool&gt;(&quot;activeSelf&quot;, t =&gt; t.activeSelf, (t, v) =&gt; t.SetActive(v));
+        Register&lt;GameObject, int&gt;(&quot;layer&quot;, t =&gt; t.layer, (t, v) =&gt; t.layer = v);
+        Register&lt;GameObject, string&gt;(&quot;tag&quot;, t =&gt; t.tag, (t, v) =&gt; t.tag = v);
+
+        Register&lt;Behaviour, bool&gt;(&quot;enabled&quot;, t =&gt; t.enabled, (t, v) =&gt; t.enabled = v);
+        Register&lt;Behaviour, bool&gt;(&quot;isActiveAndEnabled&quot;, t =&gt; t.isActiveAndEnabled, null);
+
+        Register&lt;Component, string&gt;(&quot;tag&quot;, t =&gt; t.tag, (t, v) =&gt; t.tag = v);
+
+        Register&lt;Canvas, float&gt;(&quot;planeDistance&quot;, t =&gt; t.planeDistance, (t, v) =&gt; t.planeDistance = v);
+        Register&lt;Canvas, string&gt;(&quot;sortingLayerName&quot;, t =&gt; t.sortingLayerName, (t, v) =&gt; t.sortingLayerName = v);
+        Register&lt;Canvas, int&gt;(&quot;sortingLayerID&quot;, t =&gt; t.sortingLayerID, (t, v) =&gt; t.sortingLayerID = v);
+        Register&lt;Canvas, int&gt;(&quot;renderOrder&quot;, t =&gt; t.renderOrder, null);
+
+        Register&lt;CanvasGroup, float&gt;(&quot;alpha&quot;, t =&gt; t.alpha, (t, v) =&gt; t.alpha = v);
+        Register&lt;CanvasGroup, bool&gt;(&quot;interactable&quot;, t =&gt; t.interactable, (t, v) =&gt; t.interactable = v);
+        Register&lt;CanvasGroup, bool&gt;(&quot;blocksRaycasts&quot;, t =&gt; t.blocksRaycasts, (t, v) =&gt; t.blocksRaycasts = v);
+        Register&lt;CanvasGroup, bool&gt;(&quot;ignoreParentGroups&quot;, t =&gt; t.ignoreParentGroups, (t, v) =&gt; t.ignoreParentGroups = v);
+
+        Register&lt;GraphicRaycaster, bool&gt;(&quot;ignoreReversedGraphics&quot;, t =&gt; t.ignoreReversedGraphics, (t, v) =&gt; t.ignoreReversedGraphics = v);
+
+        Register&lt;Mask, bool&gt;(&quot;showMaskGraphic&quot;, t =&gt; t.showMaskGraphic, (t, v) =&gt; t.showMaskGraphic = v);
+
+        Register&lt;Selectable, SpriteState&gt;(&quot;spriteState&quot;, t =&gt; t.spriteState, (t, v) =&gt; t.spriteState = v);
+        Register&lt;Selectable, ColorBlock&gt;(&quot;colors&quot;, t =&gt; t.colors, (t, v) =&gt; t.colors = v);
+        Register&lt;Selectable, bool&gt;(&quot;interactable&quot;, t =&gt; t.interactable, (t, v) =&gt; t.interactable = v);
+
+        Register&lt;Button, Button.ButtonClickedEvent&gt;(&quot;onClick&quot;, t =&gt; t.onClick, null);
+
+        Register&lt;InputField, InputField.OnChangeEvent&gt;(&quot;onValueChanged&quot;, t =&gt; t.onValueChanged, null);
+        Register&lt;InputField, InputField.SubmitEvent&gt;(&quot;onEndEdit&quot;, t =&gt; t.onEndEdit, null);
+        Register&lt;InputField, string&gt;(&quot;text&quot;, t =&gt; t.text, (t, v) =&gt; t.text = v);
+
+        Register&lt;Scrollbar, Scrollbar.ScrollEvent&gt;(&quot;onValueChanged&quot;, t =&gt; t.onValueChanged, null);
+        Register&lt;Scrollbar, float&gt;(&quot;size&quot;, t =&gt; t.size, (t, v) =&gt; t.size = v);
+        Register&lt;Scrollbar, float&gt;(&quot;value&quot;, t =&gt; t.value, (t, v) =&gt; t.value = v);
+
+        Register&lt;Slider, Slider.SliderEvent&gt;(&quot;onValueChanged&quot;, t =&gt; t.onValueChanged, null);
+        Register&lt;Slider, float&gt;(&quot;value&quot;, t =&gt; t.value, (t, v) =&gt; t.value = v);
+        Register&lt;Slider, float&gt;(&quot;maxValue&quot;, t =&gt; t.maxValue, (t, v) =&gt; t.maxValue = v);
+        Register&lt;Slider, float&gt;(&quot;minValue&quot;, t =&gt; t.minValue, (t, v) =&gt; t.minValue = v);
+
+        Register&lt;Dropdown, int&gt;(&quot;value&quot;, t =&gt; t.value, (t, v) =&gt; t.value = v);
+        Register&lt;Dropdown, Dropdown.DropdownEvent&gt;(&quot;onValueChanged&quot;, t =&gt; t.onValueChanged, null);
+
+        Register&lt;Text, string&gt;(&quot;text&quot;, t =&gt; t.text, (t, v) =&gt; t.text = v);
+        Register&lt;Text, int&gt;(&quot;fontSize&quot;, t =&gt; t.fontSize, (t, v) =&gt; t.fontSize = v);
+
+        Register&lt;Toggle, bool&gt;(&quot;isOn&quot;, t =&gt; t.isOn, (t, v) =&gt; t.isOn = v);
+        Register&lt;Toggle, Toggle.ToggleEvent&gt;(&quot;onValueChanged&quot;, t =&gt; t.onValueChanged, (t, v) =&gt; t.onValueChanged = v);
+
+        Register&lt;ToggleGroup, bool&gt;(&quot;allowSwitchOff&quot;, t =&gt; t.allowSwitchOff, (t, v) =&gt; t.allowSwitchOff = v);
+    }
+
+    static void Register&lt;T, TValue&gt;(string name, Func&lt;T, TValue&gt; getter, Action&lt;T, TValue&gt; setter)
+    {
+        var propertyInfo = typeof(T).GetProperty(name);
+        if (propertyInfo is PropertyInfo)
+        {
+            ProxyFactory.Default.Register(new ProxyPropertyInfo&lt;T, TValue&gt;(name, getter, setter));
+            return;
+        }
+
+        var fieldInfo = typeof(T).GetField(name);
+        if (fieldInfo is FieldInfo)
+        {
+            ProxyFactory.Default.Register(new ProxyFieldInfo&lt;T, TValue&gt;(name, getter, setter));
+            return;
+        }
+
+        throw new Exception(string.Format(&quot;Not found the property or field named '{0}' in {1} type&quot;, name, typeof(T).Name));
+    }
+}
+</code></pre>
+<h3>UI框架</h3>
+<h4>动态变量集(Variables)</h4>
+<p>在UI的开发过程中，视图脚本往往需要访问、控制UI界面上的UI控件，通常来说，我们要么通过Transform.Find来查找，要么在View脚本中定义一个属性，在编辑UI界面时将控件拖放到这个属性上。第一种方式效率不高，第二种方式新增、删除都要重新改脚本属性，不是那么灵活。 在这里，我提供了第三中方式，VariableArray，这是一个动态的变量集，可以方便的新增和删除，又可以像一个成员属性一样使用。而且它不但支持所有的基本数据类型，还支持Unity组件类型、值类型。</p>
+<p><img src="images/Variable_UI.png" alt=""></p>
+<pre><code>//C#，访问变量
+Color color = this.variables.Get&lt;Color&gt;(&quot;color&quot;);
+InputField usernameInput = this.variables.Get&lt;InputField&gt;(&quot;username&quot;);
+InputField emailInput = this.variables.Get&lt;InputField&gt;(&quot;email&quot;);
+
+--Lua，可以直接通过self来访问变量，跟当前Lua表中的成员属性一样
+printf(&quot;vector:%s&quot;,self.vector:ToString())
+printf(&quot;color:%s&quot;,self.color:ToString())
+printf(&quot;username:%s&quot;,self.username.text)
+printf(&quot;email:%s&quot;,self.email.text)
+</code></pre>
+<h4>UI视图定位器(IUIViewLocator)</h4>
+<p>UI视图定位器是一个查询和加载UI视图的服务，它提供了同步和异步加载UI视图的服务。根据项目的不同，可以自定义实现它的功能，你可以从Resources中加载视图，也可以从一个AssetBundle中加载视图，或者两者都支持。</p>
+<pre><code>//C#，创建一个默认的视图定位器，它支持从Resources中加载视图，如果要从AssetBundle中加载，需要自己实现
+IUIViewLocator locator = new DefaultUIViewLocator()
+
+//通过UI视图定位器，根据一个UI路径名加载一个Loading的窗口视图
+var window = locator.LoadWindow&lt;LoadingWindow&gt;(&quot;UI/Loading&quot;);
+window.Show();
+</code></pre>
+<h4>UI视图动画(Animations)</h4>
+<p>根据一个UI视图打开、关闭、获得焦点、失去焦点的过程，视图动画可以分为入场动画、出场动画、激活动画、钝化动画。继承UIAnimation或者IAnimation，使用DoTween、iTween等，可以创建自己满意的UI动画。</p>
+<p>在框架中UIView支持入场动画和出场动画，当打开一个视图或者隐藏一个视图时会可以播放动画。而Window除了支持入场动画和出场动画，还支持激活动画和钝化动画，并且自动控制播放，当一个Window获得焦点时播放激活动画，当失去焦点是播放钝化动画。</p>
+<p>如下所示，在Examples中，我创建了一个渐隐渐显的动画，将他们挂在一个Window视图上，并设置为入场动画和出场动画，当窗口打开时逐渐显现，当窗口关闭时慢慢消失。</p>
+<p>自定义一个C#的渐隐渐显动画</p>
+<p><img src="images/Animations_Alpha.png" alt=""></p>
+<pre><code>public class AlphaAnimation : UIAnimation
+{
+    [Range (0f, 1f)]
+    public float from = 1f;
+    [Range (0f, 1f)]
+    public float to = 1f;
+
+    public float duration = 2f;
+
+    private IUIView view;
+
+    void OnEnable ()
+    {
+        this.view = this.GetComponent&lt;IUIView&gt; ();
+        switch (this.AnimationType) {
+        case AnimationType.EnterAnimation:
+            this.view.EnterAnimation = this;
+            break;
+        case AnimationType.ExitAnimation:
+            this.view.ExitAnimation = this;
+            break;
+        case AnimationType.ActivationAnimation:
+            if (this.view is IWindowView)
+                (this.view as IWindowView).ActivationAnimation = this;
+            break;
+        case AnimationType.PassivationAnimation:
+            if (this.view is IWindowView)
+                (this.view as IWindowView).PassivationAnimation = this;
+            break;
+        }
+
+        if (this.AnimationType == AnimationType.ActivationAnimation
+                || this.AnimationType == AnimationType.EnterAnimation)
+        {
+            this.view.CanvasGroup.alpha = from;
+        }
+    }
+
+    public override IAnimation Play ()
+    {
+        this.view.CanvasGroup.DOFade (this.to, this.duration)
+        .OnStart (this.OnStart)
+        .OnComplete (this.OnEnd)
+        .Play ();
+        return this;
+    }
+}
+</code></pre>
+<p>使用DoTween自定义一个Lua的动画</p>
+<p><img src="images/Animations_Alpha_Lua.png" alt=""></p>
+<pre><code>require(&quot;framework.System&quot;)
+
+---
+--模块
+--@module AlphaAnimation
+local M=class(&quot;AlphaAnimation&quot;,target)
+
+function M:play(view,startCallback,endCallback)
+    view.CanvasGroup:DOFade(self.to, self.duration)
+        :OnStart(function() startCallback() end)
+        :OnComplete(function() endCallback() end)
+        :Play()    
+end
+
+return M
+</code></pre>
+<h4>UI控件</h4>
+<p>UGUI虽然为我们提供了丰富的UI控件库，但是在某些时候，仍然无法满足我们的要求，比如我们需要一个性能优越的ListView，这时候我们就需要自定义自己的UI控件。在本框架中，我提供了一些常用的UI控件，比如AlertDialog、Loading、Toast等，在Examples/Resources/UI目录下，你能找到默认的视图界面，参考这些界面可以重新定义界面外观，修改静态类的ViewName属性可以重新制定视图的加载路径。</p>
+<p>下面以AlertDialog为例来介绍它们的用法</p>
+<p><img src="images/AlertDialog.png" alt=""></p>
+<pre><code>//对话框视图默认目录路径是UI/AlertDialog，可以通过如下方式修改视图路径
+AlertDialog.ViewName = &quot;Your view directory/AlertDialog&quot;;
+
+//C#，打开一个对话框窗口
+AlertDialog.ShowMessage(&quot;This is a dialog test.&quot;, &quot;Interation Example&quot;, &quot;Yes&quot;, null, &quot;No&quot;, true,
+result =&gt;
+{
+    Debug.LogFormat(&quot;Result:{0}&quot;,result);
+});
+</code></pre>
+<h4>视图、窗口和窗口管理器</h4>
+<ul>
+<li>
+<p><strong>视图(IView/IUIView)</strong></p>
+<p>视图通俗的讲就是展现给用户所看到的UI界面、图像、动画等。在本框架中，根据游戏视图层的特点，将其分成两大类，场景视图和UI视图。UI视图对应的是IUIView接口，而场景视图对应的是IView接口。</p>
+</li>
+<li>
+<p><strong>视图组(IViewGroup/IUIViewGroup)</strong></p>
+<p>视图组是一个视图的集合，也可以说是视图容器，它有多个视图组成，在视图组中可以添加、删除子视图。同时视图组本身也是一个视图，它同样可以做为其他视图组的子视图。</p>
+<p>在UI开发中，我们经常会发现一个UI界面可以划分很多的区域，比如Top栏，左边栏，右边栏，Bottom栏，内容区域等等，并且有些部分在多个UI界面之间是可以共享使用的。根据这些特点，我就可以将不同的区域分别做成不同的视图，在最后界面显示时，通过视图组装配成完整的视图，这样既有助于提高代码的重复利用，又大大降低了代码的耦合性和复杂性。<strong>重点说一下，我们可以用这种设计思路来设计游戏的新手引导系统，只有界面需要显示引导时，才将引导界面动态插入到当前的界面中。新手引导的逻辑与正常游戏逻辑完全分离，避免造成引导逻辑和游戏逻辑的高度耦合。</strong></p>
+<p>同样，在游戏场景视图中，我们也可以将复杂视图拆分成大大小小的视图组和子视图，并且在游戏过程中，动态的添加和删除子视图。比如一个游戏角色，就是场景中的一个子视图，当角色进入视野时添加视图，当从视野消失时，删除视图。</p>
+<p>以王者荣耀日常活动界面为例，可以拆分为顶菜单栏、左侧菜单栏和内容区域，菜单栏视图可以复用，每次只需要改变内容区域的视图即可。</p>
+<p><img src="images/View_Example.png" alt=""></p>
+</li>
+<li>
+<p><strong>窗口(IWindow)</strong></p>
+<p>Window是一个UI界面视图的根容器(IUIViewGroup、IUIView)，同时也是一个控制器，它负责创建、销毁、显示、隐藏窗口视图，负责管理视图、视图模型的生命周期，负责创建子窗口、与子窗口交互等。</p>
+<pre><code>//C#，创建窗口
+public class ExampleWindow : Window
+{
+    public Text progressBarText;
+    public Slider progressBarSlider;
+    public Text tipText;
+    public Button button;
+
+    protected override void OnCreate(IBundle bundle)
+    {
+        BindingSet&lt;ExampleWindow, ExampleViewModel&gt; bindingSet;
+        bindingSet = this.CreateBindingSet(new ExampleViewModel());
+
+        bindingSet.Bind(this.progressBarSlider).For(&quot;value&quot;, &quot;onValueChanged&quot;).To(&quot;ProgressBar.Progress&quot;).TwoWay();
+        bindingSet.Bind(this.progressBarSlider.gameObject).For(v =&gt; v.activeSelf)
+        .To(vm =&gt; vm.ProgressBar.Enable).OneWay();
+        bindingSet.Bind(this.progressBarText).For(v =&gt; v.text)
+        .ToExpression(
+            vm =&gt; string.Format(&quot;{0}%&quot;, Mathf.FloorToInt(vm.ProgressBar.Progress * 100f)))
+        .OneWay();
+        bindingSet.Bind(this.tipText).For(v =&gt; v.text).To(vm =&gt; vm.ProgressBar.Tip).OneWay();
+        bindingSet.Bind(this.button).For(v =&gt; v.onClick).To(vm =&gt; vm.Click).OneWay();
+        binding,bound to the onClick event and interactable property.
+        bindingSet.Build();
+    }
+
+    protected override void OnDismiss()
+    {
+    }
+}
+
+--Lua,创建窗口
+require(&quot;framework.System&quot;)
+
+local ExampleViewModel = require(&quot;LuaUI.Startup.ExampleViewModel&quot;)
+
+---
+--模块
+--@module ExampleWindow
+local M=class(&quot;ExampleWindow&quot;,target)
+
+function M:onCreate(bundle)
+    self.viewModel = ExampleViewModel()
+
+    self:BindingContext().DataContext = self.viewModel
+
+    local bindingSet = self:CreateBindingSet()
+
+    bindingSet:Bind(self.progressBarSlider):For(&quot;value&quot;, &quot;onValueChanged&quot;):To(&quot;progressBar.progress&quot;):TwoWay()
+    bindingSet:Bind(self.progressBarSlider.gameObject):For(&quot;activeSelf&quot;):To(&quot;progressBar.enable&quot;):OneWay()
+    bindingSet:Bind(self.progressBarText):For(&quot;text&quot;):ToExpression(
+        function(vm) return string.format(&quot;%0.2f%%&quot;,vm.progressBar.progress * 100) end,
+    &quot;progressBar.progress&quot;):OneWay()
+    bindingSet:Bind(self.tipText):For(&quot;text&quot;):To(&quot;progressBar.tip&quot;):OneWay()
+    bindingSet:Bind(self.button):For(&quot;onClick&quot;):To(&quot;command&quot;):OneWay()
+    bindingSet:Build()
+end
+
+return M
+</code></pre>
+</li>
+<li>
+<p><strong>窗口容器和窗口管理器(WindowContainer、IWindowManager)</strong></p>
+<p>窗口管理器是一个管理窗口的容器，游戏启动时首先需要创建一个全局的窗口管理器GlobalWindowManager，将它挂在最外层的根Canvas上（见下图），在这个根Canvas下创建编辑其他的窗口视图。</p>
+<p><img src="images/WindowManager.png" alt=""></p>
+<p>窗口容器既是一个窗口管理器，又是一个窗口，在窗口容器中可以添加、删除子窗口、管理子窗口，也可以像一个普通窗口一样显示、隐藏。拿我们的MMO游戏来说，一般会创建一个名为&quot;Main&quot;的主窗口容器和一个&quot;Battle&quot;的窗口容器，在主界面打开的所有窗口视图都会放入到Main容器中，但是当进入某个战斗副本时，会将Main容器隐藏，将&quot;Battle&quot;容器显示出来，战斗副本中所有UI窗口都会用Battle容器来管理，退出副本时，只需要关闭Battle容器，设置Main容器可见，就可以轻松恢复Main容器中窗口的层级关系。</p>
+<pre><code>//C#，创建一个MAIN容器，默认会在全局窗口管理器中创建
+WindowContainer winContainer = WindowContainer.Create(&quot;MAIN&quot;);
+IUIViewLocator locator = context.GetService&lt;IUIViewLocator&gt;();
+
+//在MAIN容器中打开一个窗口
+StartupWindow window = locator.LoadWindow&lt;StartupWindow&gt;(winContainer, &quot;UI/Startup/Startup&quot;);
+ITransition transition = window.Show()    
+</code></pre>
+</li>
+<li>
+<p><strong>窗口类型</strong></p>
+<p>窗口类型按不同的功能特征分为FULL、POPUP、QUEUED_POPUP、DIALOG、PROGRESS五种类型。</p>
+<ul>
+<li>
+<p>全屏窗口(FULL)</p>
+<p>全屏窗口一般为全屏显示，它优先级较低。</p>
+</li>
+<li>
+<p>弹出窗口(POPUP)</p>
+<p>弹出窗口在被其他窗口覆盖时，会自动关闭，但是可以通过ITransition.Overlay()函数重写覆盖规则；</p>
+<pre><code>  var window = ...
+  window.Show().Overlay((previous,current) =&gt;
+  {
+       if (previous == null || previous.WindowType == WindowType.FULL)
+          return ActionType.None;
+
+      if (previous.WindowType == WindowType.POPUP)
+          return ActionType.Dismiss;
+
+      return ActionType.None;
+  });
+</code></pre>
+<p>以上代码覆盖默认的规则，通过它可以控制前一个窗口的关闭和隐藏等。</p>
+</li>
+<li>
+<p>系统对话窗(DIALOG)</p>
+<p>系统对话窗和进度窗口有最高的优先级，在同一个窗口管理器中，它会显示在最顶层，并且只允许打开一个，当有对话窗或者进度窗口显示时，如果打开其他窗口，其他窗口不会显示，只有当系统对话框或者进度窗关闭时其它窗口才会显示出来，如果同时打开多个对话窗，对话窗口会排队处理，只有关闭前一个才会显示下一个；系统对话窗一般用来处理网络断开提示重连，或者退出游戏时提示用户确认等。</p>
+</li>
+<li>
+<p>进度条对话窗(PROGRESS)</p>
+<p>功能等同于系统对话窗，在显示进度条对话窗时使用。</p>
+</li>
+<li>
+<p>队列弹窗(QUEUED_POPUP)</p>
+<p>队列弹窗(QUEUED_POPUP)功能类似DIALOG类型，但是可以配置窗口优先级，在同一个窗口管理器，它只允许打开一个，当有其他的QUEUED_POPUP或者POPUP、FULL等窗口打开时，会排队等候，并且优先级高的QUEUED_POPUP窗口先打开，优先级低的后打开，其他窗口最后打开，队列弹窗(QUEUED_POPUP)优先级低于DIALOG和PROGRESS窗口，如果有DIALOG或者PROGRESS窗口打开时会被覆盖。</p>
+<p>这种类型的窗口一般用来展示服务器推送的消息上，比如游戏启动时，服务器推送多个消息，打开公告牌，领取奖励等等，需要打开多个窗口显示时可以使用这种类型，并且对弹出窗口排序。</p>
+</li>
+</ul>
+<p>窗口类型设置如下图：</p>
+<p><img src="images/WindowType.png" alt=""></p>
+</li>
+</ul>
+<h4>交互请求(InteractionRequest)</h4>
+<p>交互请求(InteractionRequest)在MVVM框架的使用中，我认为是最难理解，最复杂和最绕的地方，而且在网上很多的MVVM示例中，也没有讲到这部分，为什么我们需要交互请求呢？交互请求解决了什么问题？引入交互请求主要目的是为了视图模型(ViewModel)和视图(View)解耦，<strong>在视图模型中，我们不应该创建、引用和直接控制视图，因为那是控制层的工作，不应该是视图模型层的工作，视图层可以依赖视图模型层，但是反之则不允许，切记</strong>。在一个按钮(Button)的点击事件中，往往会触发视图的创建或者销毁，而在MVVM中，按钮点击事件一般都会绑定到视图模型层的一个命令（ICommand）上，即绑定到视图模型的一个成员方法上，在这个方法中往往除了视图无关的逻辑外，还包含了控制视图的创建、打开、销毁的逻辑，前文中提到，这些逻辑会造成对视图层引用和依赖，这是不允许的，所以我们就引入了交互请求(InteractionRequest)的概念，通过交互请求，将视图控制的逻辑发回到控制层中处理（在本框架中就是View、Window脚本，它们既是视图层又是控制层，见前面章节中MVVM架构图）。</p>
+<p>请看下面的代码示例，使用交互请求来打开一个警告对话窗，同时在对话窗关闭时，收到用户选择的结果。</p>
+<pre><code>public class InteractionExampleViewModel : ViewModelBase
+{
+    private InteractionRequest&lt;DialogNotification&gt; alertDialogRequest;
+
+    private SimpleCommand openAlertDialog;
+
+    public InteractionExampleViewModel()
+    {
+        //创建一个交互请求，这个交互请求的作用就是向控制层(InteractionExample)发送一个打开对话窗的通知
+        this.alertDialogRequest = new InteractionRequest&lt;DialogNotification&gt;(this);
+
+        //创建一个打响应按钮事件的命令
+        this.openAlertDialog = new SimpleCommand(Click);
+    }
+
+    public IInteractionRequest AlertDialogRequest { get { return this.alertDialogRequest; } }
+
+    public ICommand OpenAlertDialog { get { return this.openAlertDialog; } }
+
+    public void Click()
+    {
+        //设置命令的Enable为false，通过数据绑定解耦，间接将视图层按钮设置为不可点击状态
+        this.openAlertDialog.Enabled = false;
+
+        //创建一个对话框通知
+        DialogNotification notification = new DialogNotification(&quot;Interation Example&quot;,
+            &quot;This is a dialog test.&quot;, &quot;Yes&quot;, &quot;No&quot;, true);
+
+        //创建一个回调函数，此回调函数会在AlertDialog对话框关闭时调用
+        Action&lt;DialogNotification&gt; callback = n =&gt;
+        {
+            //设置命令的Enable为true，通过绑定会自动恢复按钮的点击状态
+            this.openAlertDialog.Enabled = true;
+
+            if (n.DialogResult == AlertDialog.BUTTON_POSITIVE)
+            {
+                //对话框Yes按钮被按下
+                Debug.LogFormat(&quot;Click: Yes&quot;);
+            }
+            else if (n.DialogResult == AlertDialog.BUTTON_NEGATIVE)
+            {
+                //对话框No按钮被按下
+                Debug.LogFormat(&quot;Click: No&quot;);
+            }
+        };
+
+        //交互请求向View层OnOpenAlert函数发送通知
+        this.alertDialogRequest.Raise(notification, callback);
+    }
+}
+
+public class InteractionExample : WindowView
+{
+    public Button openAlert;
+    protected override void Start()
+    {
+        InteractionExampleViewModel viewModel = new InteractionExampleViewModel();
+        this.SetDataContext(viewModel);
+
+        //创建一个bindingSet
+        BindingSet&lt;InteractionExample, InteractionExampleViewModel&gt; bindingSet;
+        bindingSet = this.CreateBindingSet&lt;InteractionExample, InteractionExampleViewModel&gt;();
+
+        //绑定本视图的OnOpenAlert函数到视图模型的交互请求AlertDialogRequest，当交互请求触发时，自动调用OnOpenAlert函数
+        bindingSet.Bind().For(v =&gt; this.OnOpenAlert(null, null)).To(vm =&gt; vm.AlertDialogRequest);
+
+        //绑定按钮的onClick事件到视图模型的OpenAlertDialog命令上
+        bindingSet.Bind(this.openAlert).For(v =&gt; v.onClick).To(vm =&gt; vm.OpenAlertDialog);
+
+        bindingSet.Build();
+    }
+
+    //创建和打开对话框的函数，通过交互请求触发
+    private void OnOpenAlert(object sender, InteractionEventArgs args)
+    {
+        //收到视图模型层交互请求alertDialogRequest发来的通知
+
+        //得到通知数据
+        DialogNotification notification = args.Context as DialogNotification;
+
+        //得到AlertDialog窗口关闭时的回调函数
+        var callback = args.Callback;
+
+        if (notification == null)
+            return;
+
+        //创建一个对话窗
+        AlertDialog.ShowMessage(notification.Message, notification.Title, notification.ConfirmButtonText,
+            null,
+            notification.CancelButtonText,
+            notification.CanceledOnTouchOutside,
+            (result) =&gt;
+            {
+                //将对话窗按钮事件响应结果赋值到notification，传递到视图模型层使用
+                notification.DialogResult = result;
+
+                //对话窗关闭时，调用交互请求中设置的回调函数，通知视图模型层处理后续逻辑
+                if (callback != null)
+                    callback();
+            });
+    }
+}
+</code></pre>
+<p>请查看示例 Interaction Tutorials.unity</p>
+<h4>交互行为(InteractionAction)</h4>
+<p>InteractionAction配合InteractionRequest配对使用，由交互请求发起交互申请，由交互行为来完成交互的任务，它是对上一节中视图方法绑定到交互请求的一个扩展，通常来说使用方法绑定交互请求就可以了，但是针对一些通用的功能，比如请求开启或者关闭一个Loading窗可以用InteractionAction来实现，以方便代码重用，在不同的视图中，只需要创建一个LoadingInteractionAction实例就可以完成Loading窗的开启功能。下面请看开启Loading的示例</p>
+<pre><code>//在ViewModel中创建一个交互请求
+this.loadingRequest = new InteractionRequest&lt;VisibilityNotification&gt;();
+
+//在ViewModel中创建一个显示Loading窗口的命令，通过命令调用交互请求打开一个Loading界面
+this.ShowLoading = new SimpleCommand(() =&gt;
+{
+    VisibilityNotification notification = new VisibilityNotification(true);
+    this.loadingRequest.Raise(notification);
+});
+
+
+//在View中创建一个交互请求LoadingInteractionAction
+this.loadingInteractionAction = new LoadingInteractionAction();
+
+//绑定InteractionAction到InteractionRequest
+bindingSet.Bind().For(v =&gt; v.loadingInteractionAction).To(vm =&gt; vm.LoadingRequest);
+</code></pre>
+<p>请查看示例 Interaction Tutorials.unity</p>
+<h4>集合与列表视图的绑定</h4>
+<p>在Unity3D游戏开发中，我们经常要使用到UGUI的ScrollRect控件，比如我们要展示一个装备列表，或者一个背包中的所有物品。那么我们可以使用数据绑定功能来自动更新列表中的内容吗，比如添加、删除、修改一个装备集合中的数据，装备列表视图会自动更新界面内容吗？ 答案是肯定的，使用ObservableList或者ObservableDictionary集合来存储装备信息，通过数据绑定集合到一个视图脚本上，就可以自动的更新装备列表的内容，只是这里的视图脚本需要我们自己实现，因为每个项目列表视图并不是标准化的，我无法提供一个通用的脚本来提供集合的绑定。</p>
+<p>下面的示例中我创建了一个ListView的视图脚本，使用它来动态更新一个装备列表的视图。</p>
+<p><img src="images/Tutorials_ListView.png" alt=""></p>
+<p>首先我们创建一个ListView控件，通过这个控件来监听装备集合ObservableDictionary的改变，当集合中内容变化时，自动更新UGUI视图，向装备列表中添加、删除装备。</p>
+<pre><code>public class ListView : UIView
+{
+    public class ItemClickedEvent : UnityEvent&lt;int&gt;
+    {
+        public ItemClickedEvent()
+        {
+        }
+    }
+
+    private ObservableList&lt;ListItemViewModel&gt; items;
+
+    public Transform content;
+
+    public GameObject itemTemplate;
+
+    public ItemClickedEvent OnSelectChanged = new ItemClickedEvent();
+
+    //装备集合，通过数据绑定赋值
+    public ObservableList&lt;ListItemViewModel&gt; Items
+    {
+        get { return this.items; }
+        set
+        {
+            if (this.items == value)
+                return;
+
+            if (this.items != null)
+                this.items.CollectionChanged -= OnCollectionChanged;
+
+            this.items = value;
+
+            this.OnItemsChanged();
+
+            if (this.items != null)
+                this.items.CollectionChanged += OnCollectionChanged;
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 监听装备集合的改变，自动更新装备列表界面
+    /// &lt;/summary&gt;
+    /// &lt;param name=&quot;sender&quot;&gt;&lt;/param&gt;
+    /// &lt;param name=&quot;eventArgs&quot;&gt;&lt;/param&gt;
+    protected void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs eventArgs)
+    {
+        switch (eventArgs.Action)
+        {
+            case NotifyCollectionChangedAction.Add:
+                this.AddItem(eventArgs.NewStartingIndex, eventArgs.NewItems[0]);
+                break;
+            case NotifyCollectionChangedAction.Remove:
+                this.RemoveItem(eventArgs.OldStartingIndex, eventArgs.OldItems[0]);
+                break;
+            case NotifyCollectionChangedAction.Replace:
+                this.ReplaceItem(eventArgs.OldStartingIndex, eventArgs.OldItems[0], eventArgs.NewItems[0]);
+                break;
+            case NotifyCollectionChangedAction.Reset:
+                this.ResetItem();
+                break;
+            case NotifyCollectionChangedAction.Move:
+                this.MoveItem(eventArgs.OldStartingIndex, eventArgs.NewStartingIndex, eventArgs.NewItems[0]);
+                break;
+        }
+    }
+
+    protected virtual void OnItemsChanged()
+    {
+        for (int i = 0; i &lt; this.items.Count; i++)
+        {
+            this.AddItem(i, items[i]);
+        }
+    }
+
+    protected virtual void OnSelectChange(GameObject itemViewGo)
+    {
+        if (this.OnSelectChanged == null || itemViewGo == null)
+            return;
+
+        for (int i = 0; i &lt; this.content.childCount; i++)
+        {
+            var child = this.content.GetChild(i);
+            if (itemViewGo.transform == child)
+            {
+                this.OnSelectChanged.Invoke(i);
+                break;
+            }
+        }
+    }
+
+    protected virtual void AddItem(int index, object item)
+    {
+        var itemViewGo = Instantiate(this.itemTemplate);
+        itemViewGo.transform.SetParent(this.content, false);
+        itemViewGo.transform.SetSiblingIndex(index);
+
+        Button button = itemViewGo.GetComponent&lt;Button&gt;();
+        button.onClick.AddListener(() =&gt; OnSelectChange(itemViewGo));
+        itemViewGo.SetActive(true);
+
+        UIView itemView = itemViewGo.GetComponent&lt;UIView&gt;();
+        itemView.SetDataContext(item);
+    }
+
+    protected virtual void RemoveItem(int index, object item)
+    {
+        Transform transform = this.content.GetChild(index);
+        UIView itemView = transform.GetComponent&lt;UIView&gt;();
+        if (itemView.GetDataContext() == item)
+        {
+            itemView.gameObject.SetActive(false);
+            Destroy(itemView.gameObject);
+        }
+    }
+
+    protected virtual void ReplaceItem(int index, object oldItem, object item)
+    {
+        Transform transform = this.content.GetChild(index);
+        UIView itemView = transform.GetComponent&lt;UIView&gt;();
+        if (itemView.GetDataContext() == oldItem)
+        {
+            itemView.SetDataContext(item);
+        }
+    }
+
+    protected virtual void MoveItem(int oldIndex, int index, object item)
+    {
+        Transform transform = this.content.GetChild(oldIndex);
+        UIView itemView = transform.GetComponent&lt;UIView&gt;();
+        itemView.transform.SetSiblingIndex(index);
+    }
+
+    protected virtual void ResetItem()
+    {
+        for (int i = this.content.childCount - 1; i &gt;= 0; i--)
+        {
+            Transform transform = this.content.GetChild(i);
+            Destroy(transform.gameObject);
+        }
+    }
+}
+</code></pre>
+<p>然后创建一个装备列表的Item视图ListItemView，它负责将Item视图上的UGUI控件和装备的视图模型绑定，当装备的视图模型改变时，自动更新Item视图的内容。</p>
+<pre><code>public class ListItemView : UIView
+{
+    public Text title;
+    public Text price;
+    public Image image;
+    public GameObject border;
+
+    protected override void Start()
+    {
+        //绑定Item上的视图元素
+        BindingSet&lt;ListItemView, ListItemViewModel&gt; bindingSet = this.CreateBindingSet&lt;ListItemView, ListItemViewModel&gt;();
+        bindingSet.Bind(this.title).For(v =&gt; v.text).To(vm =&gt; vm.Title).OneWay();
+        bindingSet.Bind(this.image).For(v =&gt; v.sprite).To(vm =&gt; vm.Icon).WithConversion(&quot;spriteConverter&quot;).OneWay();
+        bindingSet.Bind(this.price).For(v =&gt; v.text).ToExpression(vm =&gt; string.Format(&quot;${0:0.00}&quot;, vm.Price)).OneWay();
+        bindingSet.Bind(this.border).For(v =&gt; v.activeSelf).To(vm =&gt; vm.IsSelected).OneWay();
+        bindingSet.Build();
+    }
+}
+</code></pre>
+<p>最后是ListView控件和ListItemView的视图模型代码如下。</p>
+<pre><code>public class ListViewViewModel : ViewModelBase
+{
+    private readonly ObservableList&lt;ListItemViewModel&gt; items = new ObservableList&lt;ListItemViewModel&gt;();
+
+    public ObservableList&lt;ListItemViewModel&gt; Items
+    {
+        get { return this.items; }
+    }
+
+    public ListItemViewModel SelectedItem
+    {
+        get
+        {
+            foreach (var item in items)
+            {
+                if (item.IsSelected)
+                    return item;
+            }
+            return null;
+        }
+    }
+
+    public void AddItem()
+    {
+        int i = this.items.Count;
+        int iconIndex = Random.Range(1, 30);
+        this.items.Add(new ListItemViewModel() {
+            Title = &quot;Equip &quot; + i,
+            Icon = string.Format(&quot;EquipImages_{0}&quot;, iconIndex),
+            Price = Random.Range(10f, 100f)
+        });
+    }
+
+    public void RemoveItem()
+    {
+        if (this.items.Count &lt;= 0)
+            return;
+
+        int index = Random.Range(0, this.items.Count - 1);
+        this.items.RemoveAt(index);
+    }
+
+    public void ClearItem()
+    {
+        if (this.items.Count &lt;= 0)
+            return;
+
+        this.items.Clear();
+    }
+
+    public void ChangeItemIcon()
+    {
+        if (this.items.Count &lt;= 0)
+            return;
+
+        foreach (var item in this.items)
+        {
+            int iconIndex = Random.Range(1, 30);
+            item.Icon = string.Format(&quot;EquipImages_{0}&quot;, iconIndex);
+        }
+    }
+
+    public void Select(int index)
+    {
+        if (index &lt;= -1 || index &gt; this.items.Count - 1)
+            return;
+
+        for (int i = 0; i &lt; this.items.Count; i++)
+        {
+            if (i == index)
+            {
+                items[i].IsSelected = !items[i].IsSelected;
+                if (items[i].IsSelected)
+                    Debug.LogFormat(&quot;Select, Current Index:{0}&quot;, index);
+                else
+                    Debug.LogFormat(&quot;Cancel&quot;);
+            }
+            else
+            {
+                items[i].IsSelected = false;
+            }
+        }
+    }
+}
+
+public class ListItemViewModel : ViewModelBase
+{
+    private string title;
+    private string icon;
+    private float price;
+    private bool selected;
+
+    public string Title
+    {
+        get { return this.title; }
+        set { this.Set&lt;string&gt;(ref title, value, &quot;Title&quot;); }
+    }
+    public string Icon
+    {
+        get { return this.icon; }
+        set { this.Set&lt;string&gt;(ref icon, value, &quot;Icon&quot;); }
+    }
+
+    public float Price
+    {
+        get { return this.price; }
+        set { this.Set&lt;float&gt;(ref price, value, &quot;Price&quot;); }
+    }
+
+    public bool IsSelected
+    {
+        get { return this.selected; }
+        set { this.Set&lt;bool&gt;(ref selected, value, &quot;IsSelected&quot;); }
+    }
+}
+
+public class ListViewDatabindingExample : MonoBehaviour
+{
+    private int itemCount;
+    private ListViewViewModel viewModel;
+
+    public Button addButton;
+
+    public Button removeButton;
+
+    public Button clearButton;
+
+    public Button changeIconButton;
+
+    public ListView listView;
+
+    void Awake()
+    {
+        ApplicationContext context = Context.GetApplicationContext();
+        BindingServiceBundle bindingService = new BindingServiceBundle(context.GetContainer());
+        bindingService.Start();
+
+        Dictionary&lt;string, Sprite&gt; sprites = new Dictionary&lt;string, Sprite&gt;();
+        foreach (var sprite in Resources.LoadAll&lt;Sprite&gt;(&quot;EquipTextures&quot;))
+        {
+            if (sprite != null)
+                sprites.Add(sprite.name, sprite);
+        }
+        IConverterRegistry converterRegistry = context.GetContainer().Resolve&lt;IConverterRegistry&gt;();
+        converterRegistry.Register(&quot;spriteConverter&quot;, new SpriteConverter(sprites));
+    }
+
+    void Start()
+    {
+        viewModel = new ListViewViewModel();
+        for (int i = 0; i &lt; 3; i++)
+        {
+            viewModel.AddItem();
+        }
+
+        IBindingContext bindingContext = this.BindingContext();
+        bindingContext.DataContext = viewModel;
+
+        BindingSet&lt;ListViewDatabindingExample, ListViewViewModel&gt; bindingSet;
+        bindingSet = this.CreateBindingSet&lt;ListViewDatabindingExample, ListViewViewModel&gt;();
+        bindingSet.Bind(this.listView).For(v =&gt; v.Items).To(vm =&gt; vm.Items).OneWay();
+        bindingSet.Bind(this.listView).For(v =&gt; v.OnSelectChanged).To(vm =&gt; vm.Select(0)).OneWay();
+
+        bindingSet.Bind(this.addButton).For(v =&gt; v.onClick).To(vm =&gt; vm.AddItem());
+        bindingSet.Bind(this.removeButton).For(v =&gt; v.onClick).To(vm =&gt; vm.RemoveItem());
+        bindingSet.Bind(this.clearButton).For(v =&gt; v.onClick).To(vm =&gt; vm.ClearItem());
+        bindingSet.Bind(this.changeIconButton).For(v =&gt; v.onClick).To(vm =&gt; vm.ChangeItemIcon());
+
+        bindingSet.Build();
+    }
+}
+</code></pre>
+<p>请查看示例 ListView And Sprite Databinding Tutorials.unity</p>
+<h4>数据绑定与异步加载精灵</h4>
+<p>在前文的示例中，我有使用到精灵的绑定，只是它是提前加载到内存中的。在这里我将讲讲如何通过数据绑定来异步加载一个精灵。与上一节中集合绑定类似，通过一个视图脚本就可以轻松实现精灵的异步加载。下面我们来看示例。</p>
+<p>点击图中的&quot;Change Icon&quot;按钮改变图标，图标的加载为异步加载的方式，有一个加载动画。</p>
+<p><img src="images/Tutorials_SpriteUI.png" alt=""></p>
+<p>首先，我们实现一个精灵异步加载器，将它挂在需要异步加载精灵图片的Image控件上。</p>
+<p><img src="images/Tutorials_Sprite.png" alt=""></p>
+<pre><code>[RequireComponent(typeof(Image))]
+public class AsyncSpriteLoader : MonoBehaviour
+{
+    private Image target;
+    private string spriteName;
+    public Sprite defaultSprite;
+    public Material defaultMaterial;
+    public string spritePath;
+
+    public string SpriteName
+    {
+        get { return this.spriteName; }
+        set
+        {
+            if (this.spriteName == value)
+                return;
+
+            this.spriteName = value;
+            if (this.target != null)
+                this.OnSpriteChanged();
+        }
+    }
+
+    protected virtual void OnEnable()
+    {
+        this.target = this.GetComponent&lt;Image&gt;();
+    }
+
+    protected virtual void OnSpriteChanged()
+    {
+        if (string.IsNullOrEmpty(this.spriteName))
+        {
+            this.target.sprite = null;
+            this.target.material = null;
+            return;
+        }
+
+        this.target.sprite = defaultSprite;
+        this.target.material = defaultMaterial;
+
+        StartCoroutine(LoadSprite());
+    }
+
+    /// &lt;summary&gt;
+    /// 异步加载精灵，为了效果明显，在加载器等待了一秒钟
+    /// &lt;/summary&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    IEnumerator LoadSprite()
+    {
+        yield return new WaitForSeconds(1f);
+
+        Sprite[] sprites = Resources.LoadAll&lt;Sprite&gt;(this.spritePath);
+        foreach(var sprite in sprites)
+        {
+            if(sprite.name.Equals(this.spriteName))
+            {
+                this.target.sprite = sprite;
+                this.target.material = null;
+            }
+        }
+    }
+}
+</code></pre>
+<p>然后创建示例界面的视图和视图模型代码如下</p>
+<pre><code>public class SpriteViewModel : ViewModelBase
+{
+    private string spriteName = &quot;EquipImages_1&quot;;
+
+    public string SpriteName
+    {
+        get { return this.spriteName; }
+        set { this.Set&lt;string&gt;(ref spriteName, value, &quot;SpriteName&quot;); }
+    }
+
+    public void ChangeSpriteName()
+    {
+        this.SpriteName = string.Format(&quot;EquipImages_{0}&quot;, Random.Range(1, 30));
+    }
+}
+
+public class DatabindingForAsyncLoadingSpriteExample : MonoBehaviour
+{
+    public Button changeSpriteButton;
+
+    public AsyncSpriteLoader spriteLoader;
+
+    void Awake()
+    {
+        ApplicationContext context = Context.GetApplicationContext();
+        BindingServiceBundle bindingService = new BindingServiceBundle(context.GetContainer());
+        bindingService.Start();
+    }
+
+    void Start()
+    {
+        var viewModel = new SpriteViewModel();
+
+        IBindingContext bindingContext = this.BindingContext();
+        bindingContext.DataContext = viewModel;
+
+        BindingSet&lt;DatabindingForAsyncLoadingSpriteExample, SpriteViewModel&gt; bindingSet;
+        bindingSet = this.CreateBindingSet&lt;DatabindingForAsyncLoadingSpriteExample, SpriteViewModel&gt;();
+        bindingSet.Bind(this.spriteLoader).For(v =&gt; v.SpriteName).To(vm =&gt; vm.SpriteName).OneWay();
+
+        bindingSet.Bind(this.changeSpriteButton).For(v =&gt; v.onClick).To(vm =&gt; vm.ChangeSpriteName());
+
+        bindingSet.Build();
+    }
+}
+</code></pre>
+<p>请查看示例 Databinding for Asynchronous Loading Sprites Tutorials.unity</p>
+<h2>Lua</h2>
+<h3>模块与继承</h3>
+<p>利用lua的原表继承，在lua开发中模拟了类(模块)和继承的概念，通过System模块的class函数，可以定义模块、继承模块，继承C#类，扩展C#实例，以面向对象的思路编写lua代码。</p>
+<p>通过下面的代码示例，我们来看看如何定义模块和继承模块</p>
+<pre><code>-- 定义一个名为 Animal 的基类
+local Animal = class(&quot;Animal&quot;)
+
+-- Animal类的构造函数，通过Animal()来创建Animal类的实例，同时会调用这个构造函数
+function Animal:ctor(...)
+end
+
+-- 为Animal定义一个walk()的方法
+function Animal:walk()
+    print(&quot;animal walk&quot;)
+end
+
+-- 为Animal定义一个run()方法
+function Animal:run()
+    print(&quot;animal run&quot;)
+end
+
+-- 定义一个名为Cat的类，它继承了Animal类
+local Cat = class(&quot;Cat&quot;,Animal)
+
+-- Cat类的构造函数
+function Cat:ctor()
+    -- 重载了构造函数，会覆盖父类构造函数，通过如下显示的调用父类构造函数
+    Cat.super.ctor(self)
+    self.age = 5
+end
+</code></pre>
+<p>Lua除了可以继承模块，也可以继承C#的类，当然也包括静态类。要在lua继承一个非静态的C#类，那么这个类必须要能通过new关键字来实例化，或者提供了别的实例化函数。比如MonoBehaviour脚本类，无法通过new关键字来实例化，是无法在lua中继承的。在class函数中，第一个参数是类名，第二个参数必须是C#类或者是C#类的实例化函数。我们可以在Lua脚本中重写父类的函数，也可以在Lua中调用父类的函数，可以使用M.super 或者M.base(self) 获得父类，调用父类的函数，推荐使用M.super 访问父类函数，看如下代码。</p>
+<p><strong>注意：调用父类函数必须使用模块名调用，不要使用self调用</strong></p>
+<pre><code>M.super.Get(self,name,cascade) --正确
+M.base(self).Get(self,name,cascade) --正确
+
+self.super.Get(self,name,cascade) --错误
+self:base().Get(self,name,cascade) --错误
+
+M.super:Get(name,cascade) --错误
+M.base(self):Get(name,cascade) --错误
+</code></pre>
+<p>Lua继承C#类Loxodon.Framework.Contexts.Context，新增GetName()函数，重写Context.Get(string name,bool cascade)函数。</p>
+<pre><code>-- 定义一个继承C#类Context的模块，推荐模块的变量名默认都使用M
+local M = class(&quot;LuaContext&quot;,CS.Loxodon.Framework.Contexts.Context)
+
+-- 新增一个函数
+function M:GetName()
+
+    --代码省略
+
+end
+
+-- 重写父类的函数，调用父类的函数
+function M:Get(name,cascade)    
+    -- 调用父类的函数
+    local ret = M.super.Get(self,name,cascade)
+    if ret then return ret end
+
+    --代码省略
+
+end
+
+return M
+</code></pre>
+<p>MonoBehaviour脚本无法被继承，但是它的实例可以被lua扩展，使用class函数，我们可以为它添加新的属性和方法，与C#类继承不同，class第二个参数是一个C#类的实例。请看lua示例中，C#脚本LuaLauncher的扩展代码。</p>
+<p>&quot;target&quot;对象是在C#脚本LuaLauncher中，在初始化lua脚本环境时将自己的实例注入到lua环境的，在本框架所有的扩展脚本中，统一使用&quot;target&quot;的变量名,请在游戏逻辑开发中遵循这一规则。</p>
+<p><strong>注意 Lua继承一个C#类或者Lua扩展了MonoBehaviour实例之后，在Lua运行时中，C#实例和Lua模块对应的实例是同一个对象，你拿到了MonoBehaviour的实例对象，不但可以访问所有MonoBehaviour中的函数和属性，同时也可以访问Lua脚本中扩展的函数和属性</strong></p>
+<p>C#代码，LuaLauncher脚本中初始化lua执行环境的部分。</p>
+<pre><code>var luaEnv = LuaEnvironment.LuaEnv;
+scriptEnv = luaEnv.NewTable();
+
+LuaTable meta = luaEnv.NewTable();
+meta.Set(&quot;__index&quot;, luaEnv.Global);
+scriptEnv.SetMetaTable(meta);
+meta.Dispose();
+
+//将this注入到lua环境表中，这里请统一使用target变量名
+scriptEnv.Set(&quot;target&quot;, this);
+
+string scriptText = &quot;&quot;;
+if(script.Type == ScriptReferenceType.TextAsset)
+    scriptText = script.Text.text;
+else
+    string.Format(&quot;require(\&quot;framework.System\&quot;);local cls = require(\&quot;{0}\&quot;);return extends(target,cls);&quot;,
+     script.Filename)
+
+object[] result = luaEnv.DoString(scriptText, string.Format(&quot;{0}({1})&quot;, &quot;Launcher&quot;, this.name), scriptEnv);
+
+if (result.Length != 1 || !(result[0] is LuaTable))
+    throw new Exception();
+
+metatable = (LuaTable)result[0];
+
+onAwake = metatable.Get&lt;Action&lt;MonoBehaviour&gt;&gt;(&quot;awake&quot;);
+onEnable = metatable.Get&lt;Action&lt;MonoBehaviour&gt;&gt;(&quot;enable&quot;);
+onDisable = metatable.Get&lt;Action&lt;MonoBehaviour&gt;&gt;(&quot;disable&quot;);
+onStart = metatable.Get&lt;Action&lt;MonoBehaviour&gt;&gt;(&quot;start&quot;);
+onDestroy = metatable.Get&lt;Action&lt;MonoBehaviour&gt;&gt;(&quot;destroy&quot;);
+</code></pre>
+<p>通过lua扩展LuaLauncher脚本的功能，awake、enable、disable、start、destroy函数都可以在lua中实现，在C#中调用。</p>
+<pre><code>require(&quot;framework.System&quot;)
+
+local WindowContainer = CS.Loxodon.Framework.Views.WindowContainer
+local Context = CS.Loxodon.Framework.Contexts.Context
+---
+--Launcher 模块，参数target是约定的，请不要修改。
+--@module Launcher
+local M=class(&quot;Launcher&quot;,target)
+
+function M:start()
+    -- 获得应用上下文，一个游戏建议创建应用上下文和玩家上下文。
+    -- 全局的服务都放入应用上下文中，如账号服务，网络组件，配置服务等基础组件和服务
+    -- 只与某个玩家相关的如背包服务、装备服务、角色服务都放入玩家上下文，当登出游戏可以统一释放
+    local context = Context.GetApplicationContext()
+
+    -- 从应用上下文获得一个视图定位器
+    local locator = context:GetService(&quot;IUIViewLocator&quot;)
+
+    -- 创建一个名为MAIN的窗口容器
+    local winContainer = WindowContainer.Create(&quot;MAIN&quot;)
+
+    -- 通过视图定位器，加载一个启动窗口视图
+    local window = locator:LoadWindow(winContainer, &quot;LuaUI/Startup/Startup&quot;)
+
+    --创建窗口
+    window:Create()
+
+    --显示窗口，返回一个transition对象，窗口显示一般会有窗口动画，所以是一个持续过程的操作
+    local transition = window:Show()
+
+    --监听显示窗口过程的窗口状态
+    transition:OnStateChanged(function(w,state) print(&quot;Window:&quot;..w.Name..&quot; State:&quot;..state:ToString()) end)
+
+    --监听窗口显示完成事件        
+    transition:OnFinish(function() print(&quot;OnFinished&quot;)  end)
+end
+
+return M
+</code></pre>
+<h3>Lua的ObserableObject</h3>
+<p>Lua的Table要满足MVVM数据绑定的要求，在属性改变时能够触发属性修改的通知，那么就必须继承ObserableObject对象。它与C#的ObserableObject功能类似，只是为了适应Lua开发，用Lua语言重新实现的一个版本。在Lua中定义的视图模型和子视图模型，都必须继承这个类。下面请看示例</p>
+<pre><code>require(&quot;framework.System&quot;)
+
+local ObservableObject = require(&quot;framework.ObservableObject&quot;)
+
+---
+--创建一个Account视图模型
+--@module AccountViewModel
+local M = class(&quot;AccountViewModel&quot;,ObservableObject)
+
+function M:ctor(t)
+    --执行父类ObservableObject的构造函数，这个重要，否则无法监听数据改变
+    M.base(self).ctor(self)
+
+    self.id = 0
+    self.username = &quot;&quot;
+    self.Password = &quot;&quot;
+    self.email = &quot;&quot;
+    self.birthday = os.time({year =1970, month = 00, day =00, hour =00, min =00, sec = 00})
+    self.address = &quot;&quot;
+
+    if t and type(t)==&quot;table&quot; then
+        for k,v in pairs(t) do self[k] = v end
+    end
+end
+
+return M
+</code></pre>
+<h3>Lua中使用Unity的协程</h3>
+<p>XLua为我们提供了一个在lua中创建迭代器(IEnumerator)的函数util.cs_generator()。通过这个函数的可以将一个lua方法包装成一个C#的IEnumerator，然后在C#中放入协程执行。</p>
+<p>下面的doLoad函数模拟了一个加载任务，执行了一个从1到50的循环，利用lua协程的yield方法，每个次循环睡眠0.1秒。</p>
+<pre><code>---
+-- 模拟一个加载任务
+function M:doLoad(promise)
+    print(&quot;task start&quot;)
+
+    for i = 1, 50 do
+        --如果有取消请求，即调用了ProgressResult的Cancel()函数，则终止任务
+        if promise.IsCancellationRequested then
+            break
+        end
+
+        promise:UpdateProgress(i/50) --更新任务进度        
+
+        --这里coroutine.yield中可以不传入参数，则表示是每帧执行一次，
+        --也可以传入所有继承了YieldInstruction的参数，如:UnityEngine.WaitForSeconds(0.1)
+        --还可以传入一个IEnumerator对象，如：AsyncResult.WaitForDone()
+        coroutine.yield(CS.UnityEngine.WaitForSeconds(0.1))--等待0.1秒
+    end    
+    promise:UpdateProgress(1)
+    promise:SetResult()    --设置任务执行完成
+    print(&quot;task end&quot;)
+end
+</code></pre>
+<p>使用XLua的函数util.cs_generator将doLoad包装成IEnumerator放入Executors.RunOnCoroutineNoReturn中执行。</p>
+<pre><code>local Executors = require(&quot;framework.Executors&quot;)
+
+local result = ProgressResult(true)
+Executors.RunOnCoroutineNoReturn(util.cs_generator(function() self:doLoad(result) end))
+</code></pre>
+<p>在Lua中，继承C#的Executors类，扩展了两个函数RunLuaOnCoroutine和RunLuaOnCoroutineNoReturn，通过它们可以将Lua函数自动包装成一个IEnumerator放入Unity3D的协程中执行。</p>
+<pre><code>local Executors = require(&quot;framework.Executors&quot;)
+
+--前一个示例中，我们也可以如下方式执行doLoad函数
+local result = ProgressResult(true)
+Executors.RunLuaOnCoroutineNoReturn(function(r) self:doLoad(r) end,result)
+
+--或者使用下面方式执行，它与前面的方式是等价的，self.doLoad 是需要执行的函数，self和result是doLoad函数的参数
+--Executors.RunLuaOnCoroutineNoReturn(self.doLoad,self,result)
+return result
+</code></pre>
+<p>以闭包的方式定义、执行一个协程函数。</p>
+<pre><code>--执行一个协程并且返回一个IAsyncResult。传入一个过期时间duration（单位秒），执行duration秒后协程退出
+return Executors.RunLuaOnCoroutine(function(duration)
+		local wait = CS.UnityEngine.WaitForSeconds(0.05)
+		local startTime = Time.realtimeSinceStartup
+		while Time.realtimeSinceStartup - startTime &lt; duration do				
+			coroutine.yield(wait)
+		end
+	end,duration)
+</code></pre>
+<p>关于Lua协程更多的信息，请看framework.Executors和示例 LoxodonFramework/Lua/Examples/Coroutine Tutorials</p>
+<h3>Lua中使用日志系统</h3>
+<p>框架提供了一个Lua版本的日志系统，底层仍然是使用Loxodon.Log.ILog来提供服务，但是在Lua中对函数重新封装。它支持DEBUG、INFO、WARN、ERROR、FATAL多个级别，可以在代码或者配置文件中（如果使用log4net）设置日志打印的级别。同时它还支持显示日志所在的文件路径和行号，方便代码调试。</p>
+<pre><code>--如果使用默认的日志工厂，可以如下设置日志打印的级别
+--如果使用log4net，请在log4net配置文件中设置日志打印的级别
+CS.Loxodon.Log.LogManager.Default.Level = CS.Loxodon.Log.Level.INFO
+
+--初始化日志系统
+local logger = require(&quot;framework.Logger&quot;).GetLogger()
+
+--打印日志
+logger:debug(&quot;This is a test.&quot;)
+logger:info(&quot;This is a test.&quot;)
+</code></pre>
+<h3>Lua 预编译工具</h3>
+<p>使用Lua预编译工具可以将Lua脚本预编译为字节码文件，并且可以选择是否加密该文件。Lua官方的luac命令编译的字节码分64位和32位，如果想编译64位和32位兼容的字节码，请参考XLua的官方文件，有关通用字节码编译的部分<a href="https://github.com/Tencent/xLua/blob/master/Assets/XLua/Doc/compatible_bytecode.md">《通用字节码》</a>。</p>
+<p><img src="images/LuaPrecompileWizard.png" alt=""></p>
+<ul>
+<li>Bin:luac命令的路径，如果要编译64位或者32位或者两者相兼容的字节码，请选择对应的luac命令。</li>
+<li>Output：编译后的字节码文件的存储目录。可以选择Assets下面的某个目录，统一打包为一个AssetBundle，也可以选择StreamingAssets下的某个目录，直接从StreamingAssets文件夹中加载。预编译后的字节码文件的扩展名可以选择&quot;.luac&quot;或者&quot;.bytes&quot;，也可以自定义其他的扩展名。</li>
+<li>Src：lua源代码的根目录，支持多个源代码目录。源代码文件扩展名必须是&quot;.lua&quot;或者&quot;.lua.txt&quot;。</li>
+<li>Encryption：加密功能，默认支持AES加密方式，也可以自己扩展新的加密方式，加密部分的面板是动态的，扩展了新的加密方式，会自动显示在工具的界面中。</li>
+<li>Apply：保存设置</li>
+<li>Precompile：预编译Lua脚本</li>
+</ul>
+<h4>Lua加载器</h4>
+<ul>
+<li>
+<p>FileLoader 文件加载</p>
+<p>文件加载器，支持从本地文件夹加载Lua脚本或者Lua字节码文件，同时也支持从Android的apk或者obb中加载文件，所以如果你的lua源代码或者字节码文件存放在StreamingAssets文件夹中，在Android平台也能够正确加载。</p>
+</li>
+<li>
+<p>AssetBundleLoader 加载器</p>
+<p>支持从AssetBundle中加载lua脚本或者字节码，一般来说建议将所有的lua字节码都放在同一个AssetBundle中，在游戏启动时加载到内存，配置AssetBundleLoader加载器，优先从这个AssetBundle中加载lua代码。</p>
+</li>
+<li>
+<p>DecodableLoader 可解码的加载器</p>
+<p>可解码的加载器，它配合文件加载器或者AssetBundle加载器一起使用，对二进制数据进行解密。</p>
+</li>
+</ul>
+<h4>示例</h4>
+<p>在下面的示例中，在Editor模式，通过FileLoader从Assets/LuaScripts/目录中加载扩展名为&quot;.lua.txt&quot;或者&quot;.lua&quot;的lua文件。在真机模式，则通过FileLoader从Application.persistentDataPath + &quot;/LuaScripts/&quot;目录加载lua字节码文件，如果没有找到则搜索Application.streamingAssetsPath + &quot;/LuaScripts/&quot;目录，并且使用DecodableLoader加载器进行解密。</p>
+<p><strong>在LuaEnv中可以添加多个加载器，后加入的加载器优先级高于先加入的加载器。</strong></p>
+<pre><code>var luaEnv = LuaEnvironment.LuaEnv;
+
+#if UNITY_EDITOR
+    //开发模式，从本地目录加载lua源码
+    luaEnv.AddLoader(new FileLoader(Application.dataPath + &quot;/LuaScripts/&quot;, &quot;.lua&quot;));
+    luaEnv.AddLoader(new FileLoader(Application.dataPath + &quot;/LuaScripts/&quot;, &quot;.lua.txt&quot;));
+#else
+    //真机模式，从persistentDataPath或者streamingAssetsPath目录加载lua的bytecode.
+    var key = Encoding.ASCII.GetBytes(&quot;E4YZgiGQ0aqe5LEJ&quot;);
+    var iv = Encoding.ASCII.GetBytes(&quot;5Hh2390dQlVh0AqC&quot;);
+    var decryptor = new RijndaelCryptograph(128,key, iv);
+
+    var loader1 = new FileLoader(Application.streamingAssetsPath + &quot;/LuaScripts/&quot;, &quot;.bytes&quot;);
+    luaEnv.AddLoader(new DecodableLoader(loader1, decryptor));
+
+    var loader2 = new FileLoader(Application.persistentDataPath + &quot;/LuaScripts/&quot;, &quot;.bytes&quot;);
+    luaEnv.AddLoader(new DecodableLoader(loader2, decryptor));
+#endif
+</code></pre>
+<h4>扩展其他加密方式</h4>
+<p>继承Loxodon.Framework.Security.Cryptography.IDecryptor和Loxodon.Framework.Security.Cryptography.IEncryptor接口创建加密解密器，具体实现可以参考RijndaelCryptograph类的源代码。</p>
+<p>继承Loxodon.Framework.XLua.Editors.EncryptorFactory类可以为新的加密器创建一个工厂类，将加密需要的参数作为类的成员变量定义在类中，并标识字段为可序列化，即添加&quot;SerializeField&quot;属性。，这样预编译工具可以自动搜索到这个类，并为它创建一个编辑界面。具体实现请参考RijndaelCryptographFactory类。</p>
+<p>比如添加如下代码，则可以在编辑界面看到如图中所示的界面</p>
+<pre><code>public class ExampleCryptographFactory : EncryptorFactory
+{
+    [Multiline(2)]
+    [SerializeField]
+    private string privateKey;
+
+    [Multiline(5)]
+    [SerializeField]
+    private string publicKey;
+
+    public override IEncryptor Create()
+    {
+        throw new NotImplementedException();
+    }
+}
+</code></pre>
+<p><img src="images/LuaPrecompileWizard2.png" alt=""></p>
+<h2>分层架构</h2>
+<p>通常来说，为了降低项目开发中的复杂程度，将复杂的业务分解，分而治之，会采用分类、分层的解决的方式。从垂直方向来分，一个复杂的项目可以由多个子系统组成，一个子系统又可以由多个业务模块组成。从水平方向来分，按三层架构可以分为表现层、领域层和基础层，按四层架构可以分为表现层、应用层、领域层和基础层。一般来说要根据自己项目具体情况和复杂程度来选择。有关这方面的知识可以在网上查找有关文章或书籍，如果对DDD编程有兴趣的同学可以了解了解《领域驱动设计(DDD编程)》方面的知识，在这里不做过多阐述，这里只是结合我的MVVM框架，简单讲解一下一个游戏客户端项目应该如何分层。</p>
+<p><strong>请参考我的项目示例 Examples 的目录结构</strong></p>
+<h3>表现层(View)</h3>
+<p>表现层是负责向用户展示信息和接收用户输入的层。结合MVVM框架，可以分为视图层/控制层（类似Android的Activity类，视图和控制合并在一个类中）、视图模型层。</p>
+<ul>
+<li>
+<p>View层</p>
+<p>视图层一般包括窗口、视图脚本、UI控件、动画脚本、视图资源，以及其他的一些视图层辅助工具，比如视图定位器等。具体可以根据自己的项目情况来抽象和规划。</p>
+<ul>
+<li>
+<p>窗口/视图(Window、UIView等)</p>
+<p>窗口和视图脚本控制所有视图的生命周期，比如子视图、子窗口的创建、销毁都应该写在这一层代码中。如果界面打开和关闭的逻辑是由ViewModel层中的函数来触发，那么请使用IDialogService或者交换请求发送事件到视图脚本中来执行。</p>
+</li>
+<li>
+<p>UI控件(UGUI控件或者自定义控件)</p>
+<p>UI控件层，自定义的UI控件都应该写在这一层，并且强烈建议UI功能控件化，比如列表、对话框、进度条、Grid、Menu等等都应该写成通用的UI控件。</p>
+</li>
+<li>
+<p>动画脚本(Animation)</p>
+<p>UI动画层，比如可以使用DoTween写成各种窗口动画或者界面动画，直接挂在UI的GameObject上使用，可以参考我的示例来写，如果是Window动画，请继承我的UIAnimation或者使用GenericUIAnimation来实现。</p>
+</li>
+<li>
+<p>视图定位器(IUIViewLocator)</p>
+<p>视图定位器，通过视图定位器从Resources中或者从AssetBundle中来加载视图模板。当然你可以可以参考我的UI视图定位器来写自己的3D视图定位器。</p>
+</li>
+<li>
+<p>交互行为(InterationAction)</p>
+<p>交互行为，这是为了窗口和视图创建代码复用抽象出来的概念，将某些经常使用的界面创建代码封装为交互行为。</p>
+</li>
+</ul>
+</li>
+<li>
+<p>ViewModel层</p>
+<ul>
+<li>
+<p>视图模型(ViewModel)</p>
+<p>视图模型层包含所有的视图模型和子视图模型，Window和View的视图模型一般来说是一对一配对的，一个窗口必须有一个视图模型，一个窗口下的子视图，一般应该也有对应的子视图模型。但是纯粹的模型对象封装的子视图模型，比如UserInfoVM，可以是多个视图共享使用，并且当UserInfoVM属性改变，与其绑定的多个界面都会同时改变。</p>
+<p>视图模型不允许依赖视图层的对象，但是视图层可以依赖视图模型，所以视图对视图模型的依赖是单向的。视图模型通过交互请求或者IDialogService创建或者销毁视图。</p>
+<p>视图模型直接调用应用层Service来处理业务，视图模型可以注册事件到应用层的Service中，监听模型对象数据的改变。比如角色信息改变，那么角色服务应该触发角色信息改变的事件，视图模型层收到事件时更新角色信息视图模型对象中的值，触发所有UI界面的改变。</p>
+</li>
+<li>
+<p>视图模型定位器(IViewModelLocator)</p>
+<p>视图模型定位器，通过它来管理被共享使用的子视图模型，或者通过它来保存窗口视图模型（比如窗口关闭但是视图模型不销毁，下次打开窗口时，可以通过它来恢复窗口状态）。这一层不是必须的，可以不要它，也可以使用别的方案替代它。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3>应用层(Service)</h3>
+<p>应用层主要用来表达用户用例，协调不同领域对象之间的行为。如果采用DDD充血模型的设计思路，它只是很薄的一层，它作为表现层和领域层的桥梁存在，通过应用服务为表现层提供服务。如果采用传统的贫血模型的设计思路，它应该包含所有的业务逻辑的处理，在使用框架的同学中对DDD编程了解的不多，所以这里我建议采用传统的贫血模型的设计思路开发游戏。在我的项目示例中，它对应的是Services层。</p>
+<p>比如一个游戏项目可能包括角色服务、背包服务、装备服务、技能服务、聊天服务、道具服务等等，通过这些服务来管理角色信息、背包中的道具、用户的装备、用户学会的技能、聊天信息、聊天室信息等等。服务缓存这些信息，并且通过Load或者服务器推送来保证它们与服务器同步，当有消息更新时，触发事件，通知视图模型层更新。比如主界面上的各种红点（提示有新消息的那个状态）就可以通过各个服务的事件和视图模型上的红点状态来设计。</p>
+<h3>领域层(Domain Model)</h3>
+<p>领域层是负责业务逻辑表达、处理的层，是整个业务的核心。如果按DDD编程，领域层一般包含实体、值对象、领域服务、聚合、聚合根、仓储、工厂等概念，因为涉及的概念众多并且持久化需要配合CQRS + ES 模式，而且掌握起来有相当门槛，所以如果你对DDD不是非常了解，这里我并不推荐完全按DDD编程的思路来设计你的代码，而是采用贫血模型的思路，下面我只针对贫血模型要使用到的部分概念来作一个简单介绍。</p>
+<ul>
+<li>
+<p>实体(Entity)</p>
+<p>实体必须有唯一标识，比如游戏中的账号、角色、技能、装备、道具等对象，都属于实体对象。</p>
+</li>
+<li>
+<p>值对象(Value Object)</p>
+<p>值对象它用于描述领域的某个方面本身没有概念标识的对象，值对象和实体不同，它没有唯一标识，并且它的属性是不可变的，比如游戏的一些配表信息等。</p>
+</li>
+<li>
+<p>仓储(Repository)</p>
+<p>仓储层负责实体对象的增删改查等功能，通过仓储层，你可以读取数据或者持久化数据。可以将数据保存在本地Json、xml中，也可以保存在SQLite中，或者通过网络保存在服务器中。</p>
+</li>
+</ul>
+<h3>基础层(Infrastructure)</h3>
+<p>基础层包含框架、数据库访问组件、网络组件、Log组件、Protobuf组件、公共的辅助类和方法。</p>
+<h2>联系方式</h2>
+<p>邮箱: <a href="mailto:yangpc.china@gmail.com">yangpc.china@gmail.com</a><br>
+网站: <a href="https://vovgou.github.io/loxodon-framework/">https://vovgou.github.io/loxodon-framework/</a><br>
+QQ群: 622321589 <a href="https:////shang.qq.com/wpa/qunwpa?idkey=71c1e43c24900ee84aeffc76fb67c0bacddc3f62a516fe80eae6b9521f872c59"><img src="images/qq_group.png" alt=""></a></p>

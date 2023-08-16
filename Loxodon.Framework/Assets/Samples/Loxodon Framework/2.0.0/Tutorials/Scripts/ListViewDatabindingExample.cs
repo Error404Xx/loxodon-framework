@@ -83,7 +83,7 @@ namespace Loxodon.Framework.Tutorials
             bindingSet.Bind(this.listView).For(v => v.Items).To(vm => vm.Items).OneWay();
             bindingSet.Bind(this.detailView).For(v => v.Item).To(vm => vm.SelectedItem);
             bindingSet.Bind().For(v => v.editViewInteractionAction).To(vm => vm.ItemEditRequest);
-
+            
             bindingSet.Bind(this.addButton).For(v => v.onClick).To(vm => vm.AddItem);
             bindingSet.Bind(this.removeButton).For(v => v.onClick).To(vm => vm.RemoveItem);
             bindingSet.Bind(this.clearButton).For(v => v.onClick).To(vm => vm.ClearItem);
